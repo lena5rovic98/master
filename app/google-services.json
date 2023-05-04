@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "528705821059",
+    "project_id": "emotionrecognition-e2fb2",
+    "storage_bucket": "emotionrecognition-e2fb2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:528705821059:android:96a6b8a7431cb09891feb6",
+        "android_client_info": {
+          "package_name": "com.example.master"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "528705821059-q6qfhc22fd2m3d5jcj11rtvee6p3lj7c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2WJS-9d1qvygrdPbgKSse1hYB8rTu3pU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "528705821059-q6qfhc22fd2m3d5jcj11rtvee6p3lj7c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+            android:id="@+id/image_healthy_lifestyle"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_healthy_lifestyle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/guideline_5"/>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5"/>
+
+    <View
+            android:id="@+id/horizontal_view_1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="@dimen/margin_extra_big"
+            android:background="@color/light_green"
+            app:layout_constraintTop_toBottomOf="@id/guideline_5"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_login"
+            android:layout_width="match_parent" 
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/horizontal_view_1">
+        
+        <TextView
+                android:id="@+id/label_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_big"
+                android:text="@string/label_login"
+                android:textSize="@dimen/font_big"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <EditText
+                android:id="@+id/edit_text_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/placeholder_email"
+                android:backgroundTint="@color/light_gray"
+                android:textCursorDrawable="@null"
+                android:textColor="@color/black"
+                android:layout_marginTop="@dimen/margin_big"
+                android:layout_marginHorizontal="@dimen/margin_extra_big"
+                app:layout_constraintTop_toBottomOf="@id/label_title"/>
+
+        <EditText
+                android:id="@+id/edit_text_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/placeholder_password"
+                android:backgroundTint="@color/light_gray"
+                android:textCursorDrawable="@null"
+                android:textColor="@color/black"
+                android:inputType="textPassword"
+                android:layout_marginHorizontal="@dimen/margin_extra_big"
+                app:layout_constraintTop_toBottomOf="@id/edit_text_email"/>
+
+        <Button
+                android:id="@+id/button_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_big"
+                android:layout_marginHorizontal="@dimen/margin_extra_big"
+                android:text="@string/label_login"
+                android:backgroundTint="@color/light_green"
+                app:layout_constraintTop_toBottomOf="@id/edit_text_password"/>
+
+        <TextView
+                android:id="@+id/label_dont_have_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:text="@string/label_dont_have_account"
+                app:layout_constraintTop_toBottomOf="@id/button_login"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

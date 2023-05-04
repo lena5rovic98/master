@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+            android:id="@+id/label_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_big"
+            android:text="@string/label_register"
+            android:textSize="@dimen/font_big"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <EditText
+            android:id="@+id/edit_text_full_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/placeholder_full_name"
+            android:backgroundTint="@color/light_gray"
+            android:textCursorDrawable="@null"
+            android:textColor="@color/black"
+            android:layout_marginTop="@dimen/margin_big"
+            android:layout_marginHorizontal="@dimen/margin_extra_big"
+            app:layout_constraintTop_toBottomOf="@id/label_title"/>
+
+    <EditText
+            android:id="@+id/edit_text_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/placeholder_email"
+            android:backgroundTint="@color/light_gray"
+            android:textCursorDrawable="@null"
+            android:textColor="@color/black"
+            android:layout_marginHorizontal="@dimen/margin_extra_big"
+            app:layout_constraintTop_toBottomOf="@id/edit_text_full_name"/>
+
+    <EditText
+            android:id="@+id/edit_text_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/placeholder_password"
+            android:backgroundTint="@color/light_gray"
+            android:textCursorDrawable="@null"
+            android:textColor="@color/black"
+            android:inputType="textPassword"
+            android:layout_marginHorizontal="@dimen/margin_extra_big"
+            app:layout_constraintTop_toBottomOf="@id/edit_text_email"/>
+
+    <EditText
+            android:id="@+id/edit_text_age"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_big"
+            android:layout_marginHorizontal="@dimen/margin_extra_big"
+            android:hint="@string/placeholder_age"
+            android:inputType="number"
+            android:backgroundTint="@color/light_gray"
+            android:textCursorDrawable="@null"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/edit_text_password"/>
+
+    <EditText
+            android:id="@+id/edit_text_weight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/placeholder_weight"
+            android:inputType="numberDecimal"
+            android:backgroundTint="@color/light_gray"
+            android:textCursorDrawable="@null"
+            android:textColor="@color/black"
+            android:layout_marginHorizontal="@dimen/margin_extra_big"
+            app:layout_constraintTop_toBottomOf="@id/edit_text_age"/>
+
+    <EditText
+            android:id="@+id/edit_text_height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/placeholder_height"
+            android:backgroundTint="@color/light_gray"
+            android:textCursorDrawable="@null"
+            android:textColor="@color/black"
+            android:layout_marginHorizontal="@dimen/margin_extra_big"
+            android:inputType="number"
+            app:layout_constraintTop_toBottomOf="@id/edit_text_weight"/>
+
+    <Button
+            android:id="@+id/button_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_big"
+            android:layout_marginHorizontal="@dimen/margin_extra_big"
+            android:text="@string/label_register"
+            android:backgroundTint="@color/light_green"
+            app:layout_constraintTop_toBottomOf="@id/edit_text_height"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

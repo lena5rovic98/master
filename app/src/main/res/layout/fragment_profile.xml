@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/navigation_bar_height"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        tools:context=".ui.profile.ProfileFragment">
+
+    <ImageView
+            android:id="@+id/image_profile"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="@dimen/margin_big"
+            android:tint="@color/light_green"
+            android:src="@drawable/ic_profile"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+            android:id="@+id/label_full_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:textSize="@dimen/font_big"
+            android:textStyle="bold"
+            android:text="Lena Petrovic"
+            app:layout_constraintTop_toBottomOf="@id/image_profile"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+            android:id="@+id/label_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:textSize="@dimen/font_normal"
+            android:textStyle="bold"
+            android:text="lena5rovic98@gmail.com"
+            app:layout_constraintTop_toBottomOf="@id/label_full_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <View
+            android:id="@+id/horizontal_view_1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/margin_big"
+            android:layout_marginHorizontal="@dimen/margin_big"
+            android:background="@color/light_gray"
+            app:layout_constraintTop_toBottomOf="@id/label_email"/>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_3"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.3"/>
+
+    <TextView
+            android:id="@+id/label_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:layout_marginLeft="@dimen/margin_big"
+            android:textSize="@dimen/font_normal"
+            android:text="@string/placeholder_age"
+            app:layout_constraintTop_toTopOf="@id/edit_text_age"
+            app:layout_constraintBottom_toBottomOf="@id/edit_text_age"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    <EditText
+            android:id="@+id/edit_text_age"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/guideline_3"
+            app:layout_constraintTop_toBottomOf="@id/horizontal_view_1"/>
+
+    <TextView
+            android:id="@+id/label_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:layout_marginLeft="@dimen/margin_big"
+            android:textSize="@dimen/font_normal"
+            android:text="@string/placeholder_weight"
+            app:layout_constraintTop_toTopOf="@id/edit_text_weight"
+            app:layout_constraintBottom_toBottomOf="@id/edit_text_weight"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    <EditText
+            android:id="@+id/edit_text_weight"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/guideline_3"
+            app:layout_constraintTop_toBottomOf="@id/edit_text_age"/>
+
+    <TextView
+            android:id="@+id/label_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:layout_marginLeft="@dimen/margin_big"
+            android:textSize="@dimen/font_normal"
+            android:text="@string/placeholder_height"
+            app:layout_constraintTop_toTopOf="@id/edit_text_height"
+            app:layout_constraintBottom_toBottomOf="@id/edit_text_height"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    <EditText
+            android:id="@+id/edit_text_height"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/guideline_3"
+            app:layout_constraintTop_toBottomOf="@id/edit_text_weight"/>
+
+    <View
+            android:id="@+id/horizontal_view_2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginHorizontal="@dimen/margin_big"
+            android:background="@color/light_gray"
+            app:layout_constraintTop_toBottomOf="@id/edit_text_height"/>
+
+    <TextView
+            android:id="@+id/label_allow_access"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_big"
+            android:text="@string/label_allow_access"
+            app:layout_constraintTop_toTopOf="@id/switch_allow_access"
+            app:layout_constraintBottom_toBottomOf="@id/switch_allow_access"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/switch_allow_access"/>
+
+    <Switch
+            android:id="@+id/switch_allow_access"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_big"
+            android:layout_marginEnd="@dimen/margin_big"
+            app:layout_constraintTop_toBottomOf="@id/horizontal_view_2"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+            android:id="@+id/button_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_big"
+            android:text="@string/label_logout"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

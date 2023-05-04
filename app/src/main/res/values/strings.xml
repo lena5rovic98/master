@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">master</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_profile">Profile</string>
+
+    <!-- Welcome Activity -->
+    <string name="label_login">Log In</string>
+    <string name="label_register">Register</string>
+    <string name="placeholder_email">Email</string>
+    <string name="placeholder_password">Password</string>
+    <string name="label_dont_have_account"><u>Don\'t have account? Register</u></string>
+
+    <!-- Register Dialog -->
+    <string name="placeholder_full_name">Full name</string>
+    <string name="placeholder_age">Age</string>
+    <string name="placeholder_weight">Weight in kg</string>
+    <string name="placeholder_height">Height in cm</string>
+
+    <!-- Profile Fragment -->
+    <string name="label_logout">Log out</string>
+    <string name="label_allow_access">Allow app to track your data in order to improve health algorithm.</string>
+
+</resources>
