@@ -33,7 +33,7 @@ class RegisterDialog(context: Context): Dialog(context) {
                     binding.editTextPassword.text.toString(),
                     binding.editTextFullName.text.toString(),
                     Integer.parseInt(binding.editTextAge.text.toString()),
-                    Integer.parseInt(binding.editTextWeight.text.toString()).toFloat(),
+                    Integer.parseInt(binding.editTextWeight.text.toString()),
                     Integer.parseInt(binding.editTextHeight.text.toString())
                 )
             ) {

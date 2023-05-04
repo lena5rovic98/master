@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.master.R
 import com.example.master.databinding.FragmentProfileBinding
 import com.example.master.ui.firebase.FirebaseAuthentication
 
@@ -28,35 +30,40 @@ class ProfileFragment: Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
-    }
-
     private fun getData() {
         profileViewModel.getUser()
     }
 
     private fun initData() {
-         activity?.let {
+        activity?.let {
             profileViewModel.user.observe(
                 viewLifecycleOwner
             ) {
                 binding.labelFullName.text = it.fullName
                 binding.labelEmail.text = it.email
-                binding.editTextAge.setText(it.age)
+                binding.editTextAge.setText(it.age.toString())
                 binding.editTextWeight.setText(it.weight.toString())
-                binding.editTextHeight.setText(it.height)
+                binding.editTextHeight.setText(it.height.toString())
                 binding.switchAllowAccess.isChecked = it.shareData
             }
-         }
+        }
     }
 
     private fun setListeners() {
         binding.buttonLogout.setOnClickListener {
             FirebaseAuthentication.logOut()
             activity?.finish()
+        }
+
+        binding.buttonSaveChanges.setOnClickListener {
+            profileViewModel.updateUserData(
+                Integer.parseInt(binding.editTextAge.text.toString()),
+                Integer.parseInt(binding.editTextWeight.text.toString()),
+                Integer.parseInt(binding.editTextHeight.text.toString()),
+                binding.switchAllowAccess.isChecked
+            )
+            getData()
+            Toast.makeText(context, R.string.toast_user_updated, Toast.LENGTH_LONG).show()
         }
     }
 }

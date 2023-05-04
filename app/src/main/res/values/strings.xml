@@ -21,5 +21,7 @@
     <!-- Profile Fragment -->
     <string name="label_logout">Log out</string>
     <string name="label_allow_access">Allow app to track your data in order to improve health algorithm.</string>
+    <string name="label_save_changes">Save changes</string>
+    <string name="toast_user_updated">User data updated!</string>
 
 </resources>

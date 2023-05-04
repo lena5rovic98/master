@@ -21,7 +21,7 @@ object FirebaseAuthentication {
         this.context = context
     }
 
-    fun register(email: String, password: String, fullName: String, age: Int, weight: Float, height: Int): Boolean {
+    fun register(email: String, password: String, fullName: String, age: Int, weight: Int, height: Int): Boolean {
         var isRegistrationSuccessful = true
         firebaseAuth?.createUserWithEmailAndPassword(email, password)
             ?.addOnCompleteListener(OnCompleteListener<AuthResult?> { task ->
