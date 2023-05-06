@@ -23,7 +23,6 @@ import androidx.core.content.ContextCompat.checkSelfPermission
 import android.Manifest
 import android.net.Uri
 
-
 class DashboardFragment : Fragment() {
 
   private lateinit var dashboardViewModel: DashboardViewModel

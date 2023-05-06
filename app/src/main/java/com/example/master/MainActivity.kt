@@ -85,20 +85,20 @@ class MainActivity : AppCompatActivity() {
 
         // loadModelFile()
 
-        val currentTime = LocalDateTime.now()
-        val currentTimeFormatted = currentTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
+//        val currentTime = LocalDateTime.now()
+//        val currentTimeFormatted = currentTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) !== PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(
-                arrayOf(
-                    Manifest.permission.CAMERA
-                ),
-                101
-            )
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.CAMERA
+//            ) !== PackageManager.PERMISSION_GRANTED) {
+//            requestPermissions(
+//                arrayOf(
+//                    Manifest.permission.CAMERA
+//                ),
+//                101
+//            )
+//        }
 
 //        val camera = findViewById<Button>(R.id.camera_button)
 //        camera.setOnClickListener(

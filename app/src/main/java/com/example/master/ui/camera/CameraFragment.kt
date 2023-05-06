@@ -9,7 +9,6 @@ import android.graphics.Bitmap
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.media.FaceDetector
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -26,7 +25,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.master.databinding.FragmentCameraBinding
 import com.example.master.models.DetectedFace
 import com.example.master.models.NetworkLocation
-import com.example.master.ui.profile.ProfileViewModel
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.face.*
@@ -78,7 +76,6 @@ class CameraFragment: Fragment(), LocationListener {
             val extra: Bundle? = data?.extras
             val bitmap = extra?.get("data") as Bitmap?
             detectFace(bitmap!!)
-            // detectContours(bitmap!!)
         }
     }
 
