@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.master.MainActivity
 import com.example.master.databinding.ActivityWelcomeBinding
-import com.example.master.ui.firebase.FirebaseAuthentication
+import com.example.master.firebase.FirebaseAuthentication
 
 class WelcomeActivity: AppCompatActivity() {
 

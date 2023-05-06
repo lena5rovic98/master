@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.master.firebase.FirebaseReferences
 import com.example.master.models.User
-import com.example.master.ui.firebase.FirebaseAuthentication
+import com.example.master.firebase.FirebaseAuthentication
 import com.google.firebase.database.*
 
 class ProfileViewModel: ViewModel() {

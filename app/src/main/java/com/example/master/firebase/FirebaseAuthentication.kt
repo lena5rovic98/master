@@ -1,14 +1,12 @@
-package com.example.master.ui.firebase
+package com.example.master.firebase
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
-import com.example.master.firebase.FirebaseReferences
 import com.example.master.models.User
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 
 @SuppressLint("StaticFieldLeak")
 object FirebaseAuthentication {
@@ -18,7 +16,7 @@ object FirebaseAuthentication {
 
     fun getInstance(context: Context) {
         firebaseAuth = FirebaseAuth.getInstance()
-        this.context = context
+        FirebaseAuthentication.context = context
     }
 
     fun register(email: String, password: String, fullName: String, age: Int, weight: Int, height: Int): Boolean {

@@ -1,14 +1,12 @@
 package com.example.master
 
-import android.Manifest.permission.ACTIVITY_RECOGNITION
+import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -35,7 +33,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.ScheduledThreadPoolExecutor
-import android.content.res.AssetFileDescriptor
 import java.io.FileInputStream
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
@@ -80,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications, R.id.navigation_profile))
+            R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_camera, R.id.navigation_notifications, R.id.navigation_profile))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -91,33 +88,45 @@ class MainActivity : AppCompatActivity() {
         val currentTime = LocalDateTime.now()
         val currentTimeFormatted = currentTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
 
-        val camera = findViewById<Button>(R.id.camera_button)
-        camera.setOnClickListener(
-            View.OnClickListener {
-                // making a new intent for opening camera
-                val intent = Intent(
-                    MediaStore.ACTION_IMAGE_CAPTURE
-                )
-                if (intent.resolveActivity(
-                        packageManager
-                    )
-                    != null
-                ) {
-                    startActivityForResult(
-                        intent, REQUEST_IMAGE_CAPTURE
-                    )
-                } else {
-                    // if the image is not captured, set
-                    // a toast to display an error image.
-                    Toast
-                        .makeText(
-                            this@MainActivity,
-                            "Something went wrong",
-                            Toast.LENGTH_SHORT
-                        )
-                        .show()
-                }
-            })
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) !== PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                arrayOf(
+                    Manifest.permission.CAMERA
+                ),
+                101
+            )
+        }
+
+//        val camera = findViewById<Button>(R.id.camera_button)
+//        camera.setOnClickListener(
+//            View.OnClickListener {
+//                // making a new intent for opening camera
+//                val intent = Intent(
+//                    MediaStore.ACTION_IMAGE_CAPTURE
+//                )
+//                if (intent.resolveActivity(
+//                        packageManager
+//                    )
+//                    != null
+//                ) {
+//                    startActivityForResult(
+//                        intent, REQUEST_IMAGE_CAPTURE
+//                    )
+//                } else {
+//                    // if the image is not captured, set
+//                    // a toast to display an error image.
+//                    Toast
+//                        .makeText(
+//                            this@MainActivity,
+//                            "Something went wrong",
+//                            Toast.LENGTH_SHORT
+//                        )
+//                        .show()
+//                }
+//            })
 
 
         requestActivityRecognitionPermission()
@@ -141,65 +150,65 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode === REQUEST_IMAGE_CAPTURE && resultCode === RESULT_OK) {
-            val extra: Bundle? = data?.extras
-            val bitmap = extra?.get("data") as Bitmap?
-            detectFace(bitmap!!)
-            // detectContours(bitmap!!)
-        }
-    }
-
-    private fun detectFace(bitmap: Bitmap) {
-        val options: FirebaseVisionFaceDetectorOptions = FirebaseVisionFaceDetectorOptions.Builder()
-            .setPerformanceMode(FirebaseVisionFaceDetectorOptions.ACCURATE)
-            .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
-            .setClassificationMode(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
-            .build()
-
-        try {
-            image = FirebaseVisionImage.fromBitmap(bitmap)
-            detector = FirebaseVision.getInstance().getVisionFaceDetector(options)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        detector!!.detectInImage(image!!)
-            .addOnSuccessListener { firebaseVisionFaces ->
-                var resultText: String? = ""
-                var i = 1
-                for (face in firebaseVisionFaces) {
-                    resultText = "$resultText, FACE NUMBER. $i: \nSmile: ${face.smilingProbability * 100}%" +
-                            "\nleft eye open: ${face.leftEyeOpenProbability * 100}%" +
-                            "\nright eye open: ${face.rightEyeOpenProbability * 100}%"
-
-                    val leftEye = face.getLandmark(FirebaseVisionFaceLandmark.LEFT_EYE)
-//                    val faceContours = face.getContour(FirebaseVisionFaceContour.FACE).points
-
-                    val smilingProbability = face.smilingProbability
-                    val leftEyeOpenProbability = face.leftEyeOpenProbability
-                    val rightEyeOpenProbability = face.rightEyeOpenProbability
-                    val rightEyeLandmark = face.getLandmark(FirebaseVisionFaceLandmark.RIGHT_EYE)
-                    val bottomMouthLandmark = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_BOTTOM)
-                    val faceContour = face.getLandmark(FirebaseVisionFaceContour.FACE)
-
-
-
-
-                    i++
-                }
-                Toast.makeText(this@MainActivity, resultText, Toast.LENGTH_SHORT).show()
-//                if (firebaseVisionFaces.size == 0) {
-//                    Toast.makeText(this@MainActivity, "NO FACE DETECT", Toast.LENGTH_SHORT).show()
-//                } else {
-//                    Toast.makeText(this@MainActivity, "FACE DETECT", Toast.LENGTH_SHORT).show()
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (requestCode === REQUEST_IMAGE_CAPTURE && resultCode === RESULT_OK) {
+//            val extra: Bundle? = data?.extras
+//            val bitmap = extra?.get("data") as Bitmap?
+//            detectFace(bitmap!!)
+//            // detectContours(bitmap!!)
+//        }
+//    }
+//
+//    private fun detectFace(bitmap: Bitmap) {
+//        val options: FirebaseVisionFaceDetectorOptions = FirebaseVisionFaceDetectorOptions.Builder()
+//            .setPerformanceMode(FirebaseVisionFaceDetectorOptions.ACCURATE)
+//            .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
+//            .setClassificationMode(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
+//            .build()
+//
+//        try {
+//            image = FirebaseVisionImage.fromBitmap(bitmap)
+//            detector = FirebaseVision.getInstance().getVisionFaceDetector(options)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//
+//        detector!!.detectInImage(image!!)
+//            .addOnSuccessListener { firebaseVisionFaces ->
+//                var resultText: String? = ""
+//                var i = 1
+//                for (face in firebaseVisionFaces) {
+//                    resultText = "$resultText, FACE NUMBER. $i: \nSmile: ${face.smilingProbability * 100}%" +
+//                            "\nleft eye open: ${face.leftEyeOpenProbability * 100}%" +
+//                            "\nright eye open: ${face.rightEyeOpenProbability * 100}%"
+//
+//                    val leftEye = face.getLandmark(FirebaseVisionFaceLandmark.LEFT_EYE)
+////                    val faceContours = face.getContour(FirebaseVisionFaceContour.FACE).points
+//
+//                    val smilingProbability = face.smilingProbability
+//                    val leftEyeOpenProbability = face.leftEyeOpenProbability
+//                    val rightEyeOpenProbability = face.rightEyeOpenProbability
+//                    val rightEyeLandmark = face.getLandmark(FirebaseVisionFaceLandmark.RIGHT_EYE)
+//                    val bottomMouthLandmark = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_BOTTOM)
+//                    val faceContour = face.getLandmark(FirebaseVisionFaceContour.FACE)
+//
+//
+//
+//
+//                    i++
 //                }
-            }
-            .addOnFailureListener {
-                Toast.makeText(this@MainActivity, "Oops, Something went wrong", Toast.LENGTH_SHORT).show()
-            }
-    }
+//                Toast.makeText(this@MainActivity, resultText, Toast.LENGTH_SHORT).show()
+////                if (firebaseVisionFaces.size == 0) {
+////                    Toast.makeText(this@MainActivity, "NO FACE DETECT", Toast.LENGTH_SHORT).show()
+////                } else {
+////                    Toast.makeText(this@MainActivity, "FACE DETECT", Toast.LENGTH_SHORT).show()
+////                }
+//            }
+//            .addOnFailureListener {
+//                Toast.makeText(this@MainActivity, "Oops, Something went wrong", Toast.LENGTH_SHORT).show()
+//            }
+//    }
 
     private fun detectContours(bitmap: Bitmap) {
         val options2: FirebaseVisionFaceDetectorOptions = FirebaseVisionFaceDetectorOptions.Builder()

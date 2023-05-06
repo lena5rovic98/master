@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.master.R
 import com.example.master.databinding.FragmentProfileBinding
-import com.example.master.ui.firebase.FirebaseAuthentication
+import com.example.master.firebase.FirebaseAuthentication
 
 class ProfileFragment: Fragment() {
 

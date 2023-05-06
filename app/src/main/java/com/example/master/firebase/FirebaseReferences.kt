@@ -7,9 +7,11 @@ object FirebaseReferences {
 
     var firebaseDatabase: FirebaseDatabase? = null
     var usersReference: DatabaseReference? = null
+    var activityReference: DatabaseReference? = null
 
     init {
         firebaseDatabase = FirebaseDatabase.getInstance()
         usersReference = firebaseDatabase!!.getReference("users")
+        activityReference = firebaseDatabase!!.getReference("activities")
     }
 }

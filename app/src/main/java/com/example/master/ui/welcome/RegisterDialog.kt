@@ -4,7 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import com.example.master.databinding.DialogRegisterBinding
-import com.example.master.ui.firebase.FirebaseAuthentication
+import com.example.master.firebase.FirebaseAuthentication
 
 class RegisterDialog(context: Context): Dialog(context) {
 
