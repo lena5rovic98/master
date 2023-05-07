@@ -19,6 +19,9 @@
     <string name="placeholder_weight">Weight in kg</string>
     <string name="placeholder_height">Height in cm</string>
 
+    <!-- Home Fragment -->
+    <string name="label_summary">Summary</string>
+
     <!-- Profile Fragment -->
     <string name="label_logout">Log out</string>
     <string name="label_allow_access">Allow app to track your data in order to improve health algorithm.</string>

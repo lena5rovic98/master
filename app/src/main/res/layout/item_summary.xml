@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_marginVertical="@dimen/margin_small"
+        android:layout_marginHorizontal="@dimen/margin_normal"
+        android:paddingBottom="@dimen/margin_small"
+        android:background="@drawable/shape_white_rounded"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <ImageView
+            android:id="@+id/image_summary"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:src="@drawable/ic_summary"
+            android:tint="@color/purple_200"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+            android:id="@+id/label_summary_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Images smiling"
+            android:textColor="@color/purple_200"
+            android:textStyle="bold"
+            android:textSize="@dimen/font_normal"
+            app:layout_constraintTop_toTopOf="@id/image_summary"
+            app:layout_constraintBottom_toBottomOf="@id/image_summary"
+            app:layout_constraintStart_toEndOf="@id/image_summary"/>
+
+    <TextView
+            android:id="@+id/label_summary_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="20 images"
+            android:textSize="@dimen/font_normal"
+            app:layout_constraintTop_toBottomOf="@id/image_summary"
+            app:layout_constraintStart_toStartOf="@id/image_summary"/>
+
+    <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_small"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:max="100"
+            android:progress="45"
+            android:theme="@style/ProgressBar"
+            app:layout_constraintTop_toBottomOf="@id/label_summary_value"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
