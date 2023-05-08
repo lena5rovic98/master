@@ -62,7 +62,7 @@
                 android:name="com.google.firebase.ml.vision.DEPENDENCIES"
                 android:value="face" />
 
-        <receiver android:name=".ui.PhoneReceiver"
+        <receiver android:name=".receivers.PhoneReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE"/>

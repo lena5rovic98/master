@@ -1,71 +1,49 @@
 package com.example.master
 
 import android.Manifest
-import android.content.Intent
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
+import android.provider.CallLog
 import android.util.Log
-import android.view.View
-import android.widget.Button
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.master.models.PhoneCall
 import com.example.master.ui.SleepRequestsManager
 import com.google.android.gms.common.util.CollectionUtils.setOf
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
-import com.google.firebase.ml.vision.FirebaseVision
-import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.face.*
+import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.task.text.nlclassifier.NLClassifier
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
-import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.io.FileInputStream
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
-import org.tensorflow.lite.Interpreter
+import java.util.*
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import kotlin.Array
+import kotlin.IntArray
+import kotlin.arrayOf
 
 class MainActivity : AppCompatActivity() {
-
-    private val REQUEST_IMAGE_CAPTURE = 124
-    var image: FirebaseVisionImage? = null
-    var detector: FirebaseVisionFaceDetector? = null
-    var detector2: FirebaseVisionFaceDetector? = null
 
     companion object {
         const val MODEL_FILE = "model.tflite"
     }
 
-    private val permissionRequester: ActivityResultLauncher<String> =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted ->
-
-            if (!isGranted) {
-                requestActivityRecognitionPermission()
-            } else {
-                // Request goes here
-                sleepRequestManager.subscribeToSleepUpdates()
-            }
-        }
-
     private val sleepRequestManager by lazy{
         SleepRequestsManager(this)
     }
 
+    private lateinit var mainActivityViewModel: MainActivityViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,53 +59,13 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        mainActivityViewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
+
         FirebaseApp.initializeApp(this)
 
         // loadModelFile()
 
-//        val currentTime = LocalDateTime.now()
-//        val currentTimeFormatted = currentTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(
-//                this,
-//                Manifest.permission.CAMERA
-//            ) !== PackageManager.PERMISSION_GRANTED) {
-//            requestPermissions(
-//                arrayOf(
-//                    Manifest.permission.CAMERA
-//                ),
-//                101
-//            )
-//        }
-
-//        val camera = findViewById<Button>(R.id.camera_button)
-//        camera.setOnClickListener(
-//            View.OnClickListener {
-//                // making a new intent for opening camera
-//                val intent = Intent(
-//                    MediaStore.ACTION_IMAGE_CAPTURE
-//                )
-//                if (intent.resolveActivity(
-//                        packageManager
-//                    )
-//                    != null
-//                ) {
-//                    startActivityForResult(
-//                        intent, REQUEST_IMAGE_CAPTURE
-//                    )
-//                } else {
-//                    // if the image is not captured, set
-//                    // a toast to display an error image.
-//                    Toast
-//                        .makeText(
-//                            this@MainActivity,
-//                            "Something went wrong",
-//                            Toast.LENGTH_SHORT
-//                        )
-//                        .show()
-//                }
-//            })
-
+        getPhoneCalls()
 
         requestActivityRecognitionPermission()
 
@@ -150,113 +88,62 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode === REQUEST_IMAGE_CAPTURE && resultCode === RESULT_OK) {
-//            val extra: Bundle? = data?.extras
-//            val bitmap = extra?.get("data") as Bitmap?
-//            detectFace(bitmap!!)
-//            // detectContours(bitmap!!)
-//        }
-//    }
-//
-//    private fun detectFace(bitmap: Bitmap) {
-//        val options: FirebaseVisionFaceDetectorOptions = FirebaseVisionFaceDetectorOptions.Builder()
-//            .setPerformanceMode(FirebaseVisionFaceDetectorOptions.ACCURATE)
-//            .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
-//            .setClassificationMode(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
-//            .build()
-//
-//        try {
-//            image = FirebaseVisionImage.fromBitmap(bitmap)
-//            detector = FirebaseVision.getInstance().getVisionFaceDetector(options)
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//
-//        detector!!.detectInImage(image!!)
-//            .addOnSuccessListener { firebaseVisionFaces ->
-//                var resultText: String? = ""
-//                var i = 1
-//                for (face in firebaseVisionFaces) {
-//                    resultText = "$resultText, FACE NUMBER. $i: \nSmile: ${face.smilingProbability * 100}%" +
-//                            "\nleft eye open: ${face.leftEyeOpenProbability * 100}%" +
-//                            "\nright eye open: ${face.rightEyeOpenProbability * 100}%"
-//
-//                    val leftEye = face.getLandmark(FirebaseVisionFaceLandmark.LEFT_EYE)
-////                    val faceContours = face.getContour(FirebaseVisionFaceContour.FACE).points
-//
-//                    val smilingProbability = face.smilingProbability
-//                    val leftEyeOpenProbability = face.leftEyeOpenProbability
-//                    val rightEyeOpenProbability = face.rightEyeOpenProbability
-//                    val rightEyeLandmark = face.getLandmark(FirebaseVisionFaceLandmark.RIGHT_EYE)
-//                    val bottomMouthLandmark = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_BOTTOM)
-//                    val faceContour = face.getLandmark(FirebaseVisionFaceContour.FACE)
-//
-//
-//
-//
-//                    i++
-//                }
-//                Toast.makeText(this@MainActivity, resultText, Toast.LENGTH_SHORT).show()
-////                if (firebaseVisionFaces.size == 0) {
-////                    Toast.makeText(this@MainActivity, "NO FACE DETECT", Toast.LENGTH_SHORT).show()
-////                } else {
-////                    Toast.makeText(this@MainActivity, "FACE DETECT", Toast.LENGTH_SHORT).show()
-////                }
-//            }
-//            .addOnFailureListener {
-//                Toast.makeText(this@MainActivity, "Oops, Something went wrong", Toast.LENGTH_SHORT).show()
-//            }
-//    }
-
-    private fun detectContours(bitmap: Bitmap) {
-        val options2: FirebaseVisionFaceDetectorOptions = FirebaseVisionFaceDetectorOptions.Builder()
-            .setPerformanceMode(FirebaseVisionFaceDetectorOptions.ACCURATE)
-            .setContourMode(FirebaseVisionFaceDetectorOptions.ALL_CONTOURS)
-            .build()
-
-        try {
-            image = FirebaseVisionImage.fromBitmap(bitmap)
-            detector2 = FirebaseVision.getInstance()
-                .getVisionFaceDetector(options2)
-        } catch (e: Exception) {
-            e.printStackTrace()
+    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("DefaultLocale")
+    private fun getPhoneCalls() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_CALL_LOG
+            ) !== PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(
+                arrayOf(
+                    Manifest.permission.READ_CONTACTS,
+                    Manifest.permission.READ_CALL_LOG,
+                    Manifest.permission.WRITE_CALL_LOG
+                ),
+                102
+            )
         }
 
-        detector2!!.detectInImage(image!!)
-            .addOnSuccessListener { firebaseVisionFaces ->
-                for (face in firebaseVisionFaces) {
-                    val leftEye = face.getLandmark(FirebaseVisionFaceLandmark.LEFT_EYE)
-//                    val rightEye = face.getLandmark(FirebaseVisionFaceLandmark.RIGHT_EYE)
-//                    val nose = face.getLandmark(FirebaseVisionFaceLandmark.NOSE_BASE)
-//                    val leftEar = face.getLandmark(FirebaseVisionFaceLandmark.LEFT_EAR)
-//                    val rightEar = face.getLandmark(FirebaseVisionFaceLandmark.RIGHT_EAR)
-//                    val leftMouth = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_LEFT)
-//                    val bottomMouth = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_BOTTOM)
-//                    val rightMouth = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_RIGHT)
+        // all callLogs ever
+        // val managedCursor: Cursor? = contentResolver.query(CallLog.Calls.CONTENT_URI, null, null, null, null)
 
-//                    val faceContours = face.getContour(FirebaseVisionFaceContour.FACE).points
-//                    val leftEyebrowTopContours = face.getContour(FirebaseVisionFaceContour.LEFT_EYEBROW_TOP).points
-//                    val leftEyebrowBottomContours = face.getContour(FirebaseVisionFaceContour.LEFT_EYEBROW_BOTTOM).points
-//                    val rightEyebrowTopContours = face.getContour(FirebaseVisionFaceContour.RIGHT_EYEBROW_TOP).points
-//                    val rightEyebrowBottomContours = face.getContour(FirebaseVisionFaceContour.RIGHT_EYEBROW_BOTTOM).points
-//                    val leftEyeContours = face.getContour(FirebaseVisionFaceContour.LEFT_EYE).points
-//                    val rightEyeContours = face.getContour(FirebaseVisionFaceContour.RIGHT_EYE).points
-//                    val upperLipTopContours = face.getContour(FirebaseVisionFaceContour.UPPER_LIP_TOP).points
-//                    val upperLipBottomContours = face.getContour(FirebaseVisionFaceContour.UPPER_LIP_BOTTOM).points
-//                    val lowerLipTopContours = face.getContour(FirebaseVisionFaceContour.LOWER_LIP_TOP).points
-//                    val lowerLipBottomContours = face.getContour(FirebaseVisionFaceContour.LOWER_LIP_BOTTOM).points
-//                    val noseBridgeContours = face.getContour(FirebaseVisionFaceContour.NOSE_BRIDGE).points
-//                    val noseBottomContours = face.getContour(FirebaseVisionFaceContour.NOSE_BOTTOM).points
+        // getting only the past few days data
+        // TODO: write data from last time accessed to app
+        val days = Date(System.currentTimeMillis() - 1L * 24 * 3600 * 1000).time
+        val cursor = contentResolver.query(CallLog.Calls.CONTENT_URI, null, "date" + ">?", arrayOf("" + days), "date DESC")
 
-                }
-            }
-            .addOnFailureListener {
-                val a = 2
-                Toast.makeText(this@MainActivity, "Oops, Something went wrong", Toast.LENGTH_SHORT).show()
+        val number = cursor?.getColumnIndex(CallLog.Calls.NUMBER)
+        val type = cursor?.getColumnIndex(CallLog.Calls.TYPE)
+        val date = cursor?.getColumnIndex(CallLog.Calls.DATE)
+        val duration = cursor?.getColumnIndex(CallLog.Calls.DURATION)
+
+        while (cursor?.moveToNext() == true) {
+            val callType = type?.let { cursor.getString(it) }
+            val callDate = date?.let { cursor.getString(it) }
+            val callDayTime = Date(java.lang.Long.valueOf(callDate))
+            var dir = ""
+            when (callType?.toInt()) {
+                CallLog.Calls.OUTGOING_TYPE -> dir = "OUTGOING"
+                CallLog.Calls.INCOMING_TYPE -> dir = "INCOMING"
+                CallLog.Calls.MISSED_TYPE -> dir = "MISSED"
+                CallLog.Calls.REJECTED_TYPE -> dir = "REJECTED"
             }
 
+            val phoneCall = PhoneCall(
+                number?.let { cursor.getString(it) }!!,
+                dir,
+                callDayTime.time.toString(),
+                duration?.let { cursor.getString(it) }!!
+            )
+
+            mainActivityViewModel.writeCallLog(
+                callDayTime,
+                phoneCall
+            )
+        }
+        cursor?.close()
     }
 
     private fun requestActivityRecognitionPermission() {
