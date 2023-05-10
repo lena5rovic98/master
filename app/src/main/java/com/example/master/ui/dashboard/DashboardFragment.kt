@@ -42,8 +42,8 @@ class DashboardFragment : Fragment() {
 //      textView.text = it
 //    })
     getUserStats()
-    requestContactPermission()
-    getSMS()
+    // requestContactPermission()
+    // getSMS()
     // showContacts()
 
     requestPermissions(
@@ -234,7 +234,7 @@ class DashboardFragment : Fragment() {
       val body = cursor.getString(12)
       when (type) {
         "1" -> messages += "Contact: $phNumber, text: $body, type: received\n"
-        "2" -> messages += "Contact: $phNumber, text: $body, type: received\n"
+        "2" -> messages += "Contact: $phNumber, text: $body, type: sent\n"
       }
     }
     textView.text = messages

@@ -3,9 +3,12 @@ package com.example.master
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.database.Cursor
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.CallLog
+import android.provider.Telephony
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +20,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.master.models.PhoneCall
+import com.example.master.models.SMS
 import com.example.master.ui.SleepRequestsManager
 import com.google.android.gms.common.util.CollectionUtils.setOf
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -66,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         // loadModelFile()
 
         getPhoneCalls()
+        getSMS()
 
         requestActivityRecognitionPermission()
 
@@ -144,6 +149,47 @@ class MainActivity : AppCompatActivity() {
             )
         }
         cursor?.close()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getSMS() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_SMS
+            ) !== PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(
+                arrayOf(
+                    Manifest.permission.READ_SMS,
+                   ),
+                103
+            )
+        }
+
+        // TODO: write data from last time accessed to app
+        val uriSms = Uri.parse("content://sms/")
+        val days = Date(System.currentTimeMillis() - 1L * 24 * 3600 * 1000).time
+        val cursor = contentResolver.query(uriSms, null, "date" + ">?", arrayOf("" + days), "date DESC")
+
+        // val cursor: Cursor? = contentResolver?.query(uriSms, null, null, null, null)
+
+        cursor?.moveToFirst()
+        while (cursor?.moveToNext() == true) {
+            val phNumber = cursor.getString(2) // Telephony.Sms.ADDRESS
+            val dateTime = cursor.getString(4) // Telephony.Sms.DATE
+            val smsDateTime = Date(java.lang.Long.valueOf(dateTime))
+            val type = cursor.getString(9) // Telephony.Sms.TYPE
+            val body = cursor.getString(12) // Telephony.Sms.BODY
+            var messageType = ""
+            when (type) {
+                "1" -> messageType = "received"
+                "2" -> messageType = "sent"
+            }
+
+            val message = SMS(phNumber, messageType, body, smsDateTime.time.toString())
+            Log.d("sms: ", message.toString())
+            mainActivityViewModel.writeSMS(smsDateTime, message)
+        }
     }
 
     private fun requestActivityRecognitionPermission() {
