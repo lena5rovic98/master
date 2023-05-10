@@ -3,12 +3,10 @@ package com.example.master
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.CallLog
-import android.provider.Telephony
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
