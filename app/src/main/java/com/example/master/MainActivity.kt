@@ -2,6 +2,9 @@ package com.example.master
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.usage.UsageStats
+import android.app.usage.UsageStatsManager
+import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -17,18 +20,21 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.master.helpers.DateTimeFormatter.getPreviousDateMilliseconds
+import com.example.master.helpers.DateTimeFormatter.getTodaysDateMilliseconds
 import com.example.master.models.PhoneCall
 import com.example.master.models.SMS
+import com.example.master.models.UsageStatistics
 import com.example.master.ui.SleepRequestsManager
 import com.google.android.gms.common.util.CollectionUtils.setOf
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
-import com.google.firebase.ml.vision.face.*
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.task.text.nlclassifier.NLClassifier
 import java.io.FileInputStream
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import kotlin.Array
@@ -69,6 +75,7 @@ class MainActivity : AppCompatActivity() {
 
         getPhoneCalls()
         getSMS()
+        getUsageStats()
 
         requestActivityRecognitionPermission()
 
@@ -187,6 +194,43 @@ class MainActivity : AppCompatActivity() {
             val message = SMS(phNumber, messageType, body, smsDateTime.time.toString())
             Log.d("sms: ", message.toString())
             mainActivityViewModel.writeSMS(smsDateTime, message)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getUsageStats() {
+        // to grant access
+//    val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+//    startActivity(intent)
+
+        val usageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+
+        // TODO: write data from last time accessed to app
+        val startDate = getPreviousDateMilliseconds(8)
+        val endDate = getTodaysDateMilliseconds()
+
+        val queryUsageStats: List<UsageStats> = usageStatsManager.queryUsageStats(
+            UsageStatsManager.INTERVAL_DAILY,
+            startDate,
+            endDate
+        )
+
+        val usedPackages = queryUsageStats.filter {
+            return@filter it.totalTimeInForeground != 0L
+        }
+
+        for (usedPackage in usedPackages) {
+            val formatter = SimpleDateFormat("dd/MM/yyyy")
+            val date = formatter.format(Date(usedPackage.firstTimeStamp))
+
+            val usageStatistics = UsageStatistics(
+                usedPackage.packageName,
+                usedPackage.totalTimeInForeground,
+                date,
+                UsageStatistics.isSocialNetwork(usedPackage.packageName)
+            )
+
+            mainActivityViewModel.writeUsageStatistics(usedPackage.firstTimeStamp, usageStatistics)
         }
     }
 
