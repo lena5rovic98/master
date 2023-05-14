@@ -76,8 +76,8 @@ class PhoneReceiver: BroadcastReceiver(), LocationListener {
         val timeId = DateTimeFormatter.getTimeId(LocalDateTime.now())
         FirebaseReferences.activityReference
             ?.child(userId)
-            ?.child(dateId)
             ?.child("receivedCallStates")
+            ?.child(dateId)
             ?.child(timeId)
             ?.setValue(receivedCall)
     }

@@ -18,8 +18,8 @@ class CameraViewModel: ViewModel() {
         val timeId = DateTimeFormatter.getTimeId(LocalDateTime.now())
         FirebaseReferences.activityReference
             ?.child(userId)
-            ?.child(dateId)
             ?.child("detectedFace")
+            ?.child(dateId)
             ?.child(timeId)
             ?.setValue(detectedFace)
     }

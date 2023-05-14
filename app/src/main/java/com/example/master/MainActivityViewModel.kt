@@ -18,10 +18,11 @@ class MainActivityViewModel: ViewModel() {
         val userId = FirebaseAuthentication.getUser()?.uid!!
         val dateId = DateTimeFormatter.getDateId(callDate)
         val timeId = DateTimeFormatter.getTimeId(callDate)
+
         FirebaseReferences.activityReference
             ?.child(userId)
-            ?.child(dateId)
             ?.child("callLogs")
+            ?.child(dateId)
             ?.child(timeId)
             ?.setValue(phoneCall)
     }
@@ -31,10 +32,11 @@ class MainActivityViewModel: ViewModel() {
         val userId = FirebaseAuthentication.getUser()?.uid!!
         val dateId = DateTimeFormatter.getDateId(callDate)
         val timeId = DateTimeFormatter.getTimeId(callDate)
+
         FirebaseReferences.activityReference
             ?.child(userId)
-            ?.child(dateId)
             ?.child("sms")
+            ?.child(dateId)
             ?.child(timeId)
             ?.setValue(sms)
     }
@@ -42,11 +44,14 @@ class MainActivityViewModel: ViewModel() {
     fun writeUsageStatistics(dateTime: Long, statistics: UsageStatistics) {
         val userId = FirebaseAuthentication.getUser()?.uid!!
         val dateId = DateTimeFormatter.getDateId(dateTime)
+
         FirebaseReferences.activityReference
             ?.child(userId)
-            ?.child(dateId)
             ?.child("usageStatistics")
+            ?.child(dateId)
             ?.child(UsageStatistics.firebaseId(statistics.packageName))
             ?.setValue(statistics)
     }
+
+    // fun read
 }

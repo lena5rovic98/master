@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity() {
 
         // getting only the past few days data
         // TODO: write data from last time accessed to app
-        val days = Date(System.currentTimeMillis() - 1L * 24 * 3600 * 1000).time
+        val days = Date(System.currentTimeMillis() - 10L * 24 * 3600 * 1000).time
         val cursor = contentResolver.query(CallLog.Calls.CONTENT_URI, null, "date" + ">?", arrayOf("" + days), "date DESC")
 
         val number = cursor?.getColumnIndex(CallLog.Calls.NUMBER)
