@@ -2,9 +2,13 @@ package com.example.master
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.PendingIntent
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
+import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -26,7 +30,20 @@ import com.example.master.models.PhoneCall
 import com.example.master.models.SMS
 import com.example.master.models.UsageStatistics
 import com.example.master.ui.SleepRequestsManager
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.Scopes
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.Scope
 import com.google.android.gms.common.util.CollectionUtils.setOf
+import com.google.android.gms.fitness.Fitness
+import com.google.android.gms.fitness.FitnessOptions
+import com.google.android.gms.fitness.data.DataSet
+import com.google.android.gms.fitness.data.DataSource
+import com.google.android.gms.fitness.data.DataType
+import com.google.android.gms.fitness.data.Field
+import com.google.android.gms.fitness.request.DataReadRequest
+import com.google.android.gms.location.ActivityRecognition
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
 import org.tensorflow.lite.Interpreter
@@ -34,9 +51,13 @@ import org.tensorflow.lite.task.text.nlclassifier.NLClassifier
 import java.io.FileInputStream
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
+import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 import kotlin.Array
 import kotlin.IntArray
 import kotlin.arrayOf
@@ -62,8 +83,15 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_camera, R.id.navigation_notifications, R.id.navigation_profile))
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.navigation_home,
+                R.id.navigation_dashboard,
+                R.id.navigation_camera,
+                R.id.navigation_notifications,
+                R.id.navigation_profile
+            )
+        )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -76,6 +104,8 @@ class MainActivity : AppCompatActivity() {
         getPhoneCalls()
         getSMS()
         getUsageStats()
+        getFitnessData()
+        getCalories()
 
         requestActivityRecognitionPermission()
 
@@ -166,7 +196,7 @@ class MainActivity : AppCompatActivity() {
             requestPermissions(
                 arrayOf(
                     Manifest.permission.READ_SMS,
-                   ),
+                ),
                 103
             )
         }
@@ -232,6 +262,117 @@ class MainActivity : AppCompatActivity() {
 
             mainActivityViewModel.writeUsageStatistics(usedPackage.firstTimeStamp, usageStatistics)
         }
+    }
+
+    lateinit var fitnessOptions: FitnessOptions
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getFitnessData() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
+                106
+            )
+        }
+
+        fitnessOptions = FitnessOptions.builder()
+            .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
+            .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
+            .build()
+
+        val account = GoogleSignIn.getAccountForExtension(this, fitnessOptions)
+
+        if (!GoogleSignIn.hasPermissions(account, fitnessOptions)) {
+            GoogleSignIn.requestPermissions(
+                this, // your activity
+                1, // e.g. 1
+                account,
+                fitnessOptions)
+        } else {
+            getSteps()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (resultCode) {
+            Activity.RESULT_OK -> when (requestCode) {
+                1 -> getSteps()
+                else -> {
+                    // Result wasn't from Google Fit
+                }
+            }
+            else -> {
+                // Permission not granted
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getSteps() {
+        val end = LocalDateTime.now()
+        val start = end.minusDays(1)
+        val endSeconds = end.atZone(ZoneId.systemDefault()).toEpochSecond()
+        val startSeconds = start.atZone(ZoneId.systemDefault()).toEpochSecond()
+
+        val datasource = DataSource.Builder()
+            .setAppPackageName("com.google.android.gms")
+            .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
+            .setType(DataSource.TYPE_DERIVED)
+            .setStreamName("estimated_steps")
+            .build()
+
+        val request = DataReadRequest.Builder()
+            .aggregate(datasource)
+            .bucketByTime(1, TimeUnit.DAYS)
+            .setTimeRange(startSeconds, endSeconds, TimeUnit.SECONDS)
+            .build()
+
+        Fitness.getHistoryClient(this, GoogleSignIn.getAccountForExtension(this, fitnessOptions))
+            .readData(request)
+            .addOnSuccessListener { response ->
+                val totalSteps = response.buckets
+                    .flatMap { it.dataSets }
+                    .flatMap { it.dataPoints }
+                    .sumBy { it.getValue(Field.FIELD_STEPS).asInt() }
+                Log.i(TAG, "Total steps: $totalSteps")
+            }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getCalories() {
+        val end = LocalDateTime.now()
+        val start = end.minusDays(1)
+        val endSeconds = end.atZone(ZoneId.systemDefault()).toEpochSecond()
+        val startSeconds = start.atZone(ZoneId.systemDefault()).toEpochSecond()
+
+        val datasource = DataSource.Builder()
+            .setAppPackageName("com.google.android.gms")
+            .setDataType(DataType.AGGREGATE_CALORIES_EXPENDED)
+            .setDataType(DataType.TYPE_CALORIES_EXPENDED)
+            .setType(DataSource.TYPE_DERIVED)
+            .setStreamName("estimated_calories")
+            .build()
+
+        val request = DataReadRequest.Builder()
+            .aggregate(datasource)
+            .bucketByTime(1, TimeUnit.DAYS)
+            .setTimeRange(startSeconds, endSeconds, TimeUnit.SECONDS)
+            .build()
+
+        Fitness.getHistoryClient(this, GoogleSignIn.getAccountForExtension(this, fitnessOptions))
+            .readData(request)
+            .addOnSuccessListener { response ->
+                val totalCalories = response.buckets
+                    .flatMap { it.dataSets }
+                    .flatMap { it.dataPoints }
+                    .sumBy { it.getValue(Field.FIELD_CALORIES).asInt() }
+                Log.i(TAG, "Total calories: $totalCalories")
+            }
     }
 
     private fun requestActivityRecognitionPermission() {
