@@ -198,4 +198,29 @@ class MainActivityViewModel: ViewModel() {
         }
         )
     }
+
+    private val _steps = MutableLiveData<Int>().apply { }
+    val steps: LiveData<Int> = _steps
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun readSteps() {
+        val userId = FirebaseAuthentication.getUser()?.uid!!
+        val dateId = DateTimeFormatter.getDateId(LocalDateTime.now())
+        val userData = FirebaseReferences.activityReference
+            ?.child(userId)
+            ?.child("steps")
+            ?.child(dateId)
+
+        userData?.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val steps = snapshot.getValue(Int::class.java)
+                _steps.value = steps
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                throw error.toException()
+            }
+        }
+        )
+    }
 }

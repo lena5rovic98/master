@@ -382,6 +382,7 @@ class MainActivity : AppCompatActivity() {
         mainActivityViewModel.readSMS()
         mainActivityViewModel.readCallLog()
         mainActivityViewModel.readUsageStatistics()
+        mainActivityViewModel.readSteps()
     }
 
     private fun observeDataForRecyclerView() {
@@ -413,6 +414,13 @@ class MainActivity : AppCompatActivity() {
             mainActivityViewModel.usageStat.observe(this) {
                 val statistics = it
                 Log.d("Statistics: ", statistics.size.toString())
+            }
+        }
+
+        this.let {
+            mainActivityViewModel.steps.observe(this) {
+                val steps = it
+                Log.d("Steps: ", steps.toString())
             }
         }
     }
