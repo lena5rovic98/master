@@ -35,7 +35,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.util.CollectionUtils.setOf
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
-import com.google.android.gms.fitness.data.DataPoint
 import com.google.android.gms.fitness.data.DataSource
 import com.google.android.gms.fitness.data.DataType
 import com.google.android.gms.fitness.data.Field
@@ -97,9 +96,6 @@ class MainActivity : AppCompatActivity() {
         getUsageStats()
         getFitnessData()
         getCalories()
-
-        readDataForRecyclerView()
-        observeDataForRecyclerView()
 
 //        sleepRequestManager.requestSleepUpdates(requestPermission = {
 //            permissionRequester.launch(ACTIVITY_RECOGNITION)
@@ -375,56 +371,6 @@ class MainActivity : AppCompatActivity() {
                 Log.i(TAG, "Total calories: $totalCalories")
             }
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun readDataForRecyclerView() {
-        mainActivityViewModel.readDetectedFacesData()
-        mainActivityViewModel.readSMS()
-        mainActivityViewModel.readCallLog()
-        mainActivityViewModel.readUsageStatistics()
-        mainActivityViewModel.readSteps()
-    }
-
-    private fun observeDataForRecyclerView() {
-        this.let {
-            mainActivityViewModel.detectedFaces.observe(this) {
-                val faces = it
-                val smilling = faces.filter {
-                    it.smilingProbability > 1
-                }
-                Log.d("Faces num: ", faces.size.toString())
-            }
-        }
-
-        this.let {
-            mainActivityViewModel.messages.observe(this) {
-                val sms = it
-                Log.d("SMS num: ", sms.size.toString())
-            }
-        }
-
-        this.let {
-            mainActivityViewModel.calls.observe(this) {
-                val phoneCalls = it
-                Log.d("Phone calls num: ", phoneCalls.size.toString())
-            }
-        }
-
-        this.let {
-            mainActivityViewModel.usageStat.observe(this) {
-                val statistics = it
-                Log.d("Statistics: ", statistics.size.toString())
-            }
-        }
-
-        this.let {
-            mainActivityViewModel.steps.observe(this) {
-                val steps = it
-                Log.d("Steps: ", steps.toString())
-            }
-        }
-    }
-
 
     private fun requestActivityRecognitionPermission() {
 
