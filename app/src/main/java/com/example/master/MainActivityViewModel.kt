@@ -57,6 +57,16 @@ class MainActivityViewModel: ViewModel() {
             ?.setValue(statistics)
     }
 
+    fun writeSteps(dateId: String, steps: Int) {
+        val userId = FirebaseAuthentication.getUser()?.uid!!
+
+        FirebaseReferences.activityReference
+            ?.child(userId)
+            ?.child("steps")
+            ?.child(dateId)
+            ?.setValue(steps)
+    }
+
     private val _detectedFaces = MutableLiveData<ArrayList<DetectedFace>>().apply {
         value = arrayListOf()
     }

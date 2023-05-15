@@ -3,11 +3,14 @@ package com.example.master.helpers
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.google.android.gms.fitness.data.DataPoint
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 object DateTimeFormatter {
 
@@ -41,6 +44,13 @@ object DateTimeFormatter {
         val dayId = if (day < 10) "0$day" else day
 
         return "$dayId$monthId${year}"
+    }
+
+    fun getDateId(dateTime: String): String { //2023-05-14T13:38:53
+        val year = dateTime.take(4)
+        val month = dateTime.take(7).drop(5)
+        val day = dateTime.take(10).drop(8)
+        return "$day$month$year"
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -95,3 +105,8 @@ object DateTimeFormatter {
         return previousDate.time
     }
 }
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun DataPoint.getStartTimeString() = Instant.ofEpochSecond(this.getStartTime(TimeUnit.SECONDS))
+    .atZone(ZoneId.systemDefault())
+    .toLocalDateTime().toString()

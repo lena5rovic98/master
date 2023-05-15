@@ -3,7 +3,6 @@ package com.example.master
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.PendingIntent
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.ContentValues.TAG
@@ -24,26 +23,23 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.master.helpers.DateTimeFormatter
 import com.example.master.helpers.DateTimeFormatter.getPreviousDateMilliseconds
 import com.example.master.helpers.DateTimeFormatter.getTodaysDateMilliseconds
+import com.example.master.helpers.getStartTimeString
 import com.example.master.models.PhoneCall
 import com.example.master.models.SMS
 import com.example.master.models.UsageStatistics
 import com.example.master.ui.SleepRequestsManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.Scopes
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.common.api.Scope
 import com.google.android.gms.common.util.CollectionUtils.setOf
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
-import com.google.android.gms.fitness.data.DataSet
+import com.google.android.gms.fitness.data.DataPoint
 import com.google.android.gms.fitness.data.DataSource
 import com.google.android.gms.fitness.data.DataType
 import com.google.android.gms.fitness.data.Field
 import com.google.android.gms.fitness.request.DataReadRequest
-import com.google.android.gms.location.ActivityRecognition
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
 import org.tensorflow.lite.Interpreter
@@ -51,16 +47,11 @@ import org.tensorflow.lite.task.text.nlclassifier.NLClassifier
 import java.io.FileInputStream
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
-import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.ZoneId
+import java.time.*
 import java.util.*
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
-import kotlin.Array
-import kotlin.IntArray
-import kotlin.arrayOf
 
 class MainActivity : AppCompatActivity() {
 
@@ -315,9 +306,15 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getSteps() {
-        val end = LocalDateTime.now()
-        val start = end.minusDays(1)
-        val endSeconds = end.atZone(ZoneId.systemDefault()).toEpochSecond()
+//        val end = LocalDateTime.now()
+//        val start = end.minusDays(2)
+
+        // TODO: write data from last access
+        val end = LocalDateTime.of(LocalDate.now(ZoneId.of(ZoneId.systemDefault().toString())), LocalTime.MIDNIGHT)
+        val start = end.minusDays(2)
+        val end2 = end.plusDays(1)
+
+        val endSeconds = end2.atZone(ZoneId.systemDefault()).toEpochSecond()
         val startSeconds = start.atZone(ZoneId.systemDefault()).toEpochSecond()
 
         val datasource = DataSource.Builder()
@@ -336,11 +333,14 @@ class MainActivity : AppCompatActivity() {
         Fitness.getHistoryClient(this, GoogleSignIn.getAccountForExtension(this, fitnessOptions))
             .readData(request)
             .addOnSuccessListener { response ->
-                val totalSteps = response.buckets
+                response.buckets
                     .flatMap { it.dataSets }
                     .flatMap { it.dataPoints }
-                    .sumBy { it.getValue(Field.FIELD_STEPS).asInt() }
-                Log.i(TAG, "Total steps: $totalSteps")
+                    .map {
+                        val dateId = DateTimeFormatter.getDateId(it.getStartTimeString())
+                        mainActivityViewModel.writeSteps(dateId ,it.getValue(Field.FIELD_STEPS).asInt())
+                    }
+
             }
     }
 
