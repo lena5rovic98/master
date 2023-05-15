@@ -1,10 +1,10 @@
 package com.example.master.models
 
 data class UsageStatistics(
-    val packageName: String,
-    val totalTime: Long, // in milliseconds
-    val date: String,
-    val isSocialNetwork: Boolean
+    val packageName: String = "",
+    val totalTime: Long = 0L, // in milliseconds
+    val date: String = "",
+    val isSocialNetwork: Boolean = false
 ) {
     companion object {
         fun isSocialNetwork(packageName: String): Boolean {
