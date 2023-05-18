@@ -6,17 +6,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.master.databinding.ItemSummaryBinding
-import com.example.master.models.DetectedFace
+import com.example.master.models.ActivityObject
 
-class SummaryRecyclerViewAdapter : ListAdapter<DetectedFace, SummaryRecyclerViewAdapter.SummaryHolder>(DIFF_CALLBACK) {
+class SummaryRecyclerViewAdapter : ListAdapter<ActivityObject, SummaryRecyclerViewAdapter.SummaryHolder>(DIFF_CALLBACK) {
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DetectedFace>() {
-            override fun areItemsTheSame(oldItem: DetectedFace, newItem: DetectedFace): Boolean {
-                return oldItem.dateTime == newItem.dateTime
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ActivityObject>() {
+            override fun areItemsTheSame(oldItem: ActivityObject, newItem: ActivityObject): Boolean {
+                return oldItem.type == newItem.type
             }
 
-            override fun areContentsTheSame(oldItem: DetectedFace, newItem: DetectedFace): Boolean {
+            override fun areContentsTheSame(oldItem: ActivityObject, newItem: ActivityObject): Boolean {
                 return oldItem == newItem
             }
         }
@@ -32,12 +32,16 @@ class SummaryRecyclerViewAdapter : ListAdapter<DetectedFace, SummaryRecyclerView
 
     inner class SummaryHolder(val binding: ItemSummaryBinding): RecyclerView.ViewHolder(binding.root) {
 
-        private lateinit var mSummary: DetectedFace
+        private lateinit var mSummary: ActivityObject
 
-        fun bind(summary: DetectedFace) {
+        fun bind(summary: ActivityObject) {
             mSummary = summary
-            binding.labelSummaryType.text = "Type"
-            binding.labelSummaryValue.text = "0km"
+
+            binding.imageSummary.setImageResource(mSummary.icon)
+            binding.labelSummaryType.text = mSummary.type
+            binding.labelSummaryValue.text = "${mSummary.value}/${mSummary.referenceValue} ${mSummary.measurementUnit}"
+            binding.progressBar.progress = mSummary.value
+            binding.progressBar.max = mSummary.referenceValue
         }
     }
 }

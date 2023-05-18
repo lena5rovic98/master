@@ -42,8 +42,8 @@ class HomeViewModel : ViewModel() {
                     if (face != null) {
                         faces.add(face)
                     }
-                    _detectedFaces.value = faces
                 }
+                _detectedFaces.value = faces
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -75,8 +75,8 @@ class HomeViewModel : ViewModel() {
                     if (oneSMS != null) {
                         sms.add(oneSMS)
                     }
-                    _messages.value = sms
                 }
+                _messages.value = sms
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -108,8 +108,8 @@ class HomeViewModel : ViewModel() {
                     if (singlePhoneCall != null) {
                         phoneCalls.add(singlePhoneCall)
                     }
-                    _calls.value = phoneCalls
                 }
+                _calls.value = phoneCalls
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -141,8 +141,8 @@ class HomeViewModel : ViewModel() {
                     if (stat != null) {
                         statistics.add(stat)
                     }
-                    _usageStat.value = statistics
                 }
+                _usageStat.value = statistics
             }
 
             override fun onCancelled(error: DatabaseError) {

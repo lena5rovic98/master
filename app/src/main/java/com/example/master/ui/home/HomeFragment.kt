@@ -9,10 +9,10 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.master.R
 import com.example.master.databinding.FragmentHomeBinding
 import com.example.master.enum.ActivityEnum
 import com.example.master.models.ActivityObject
-import com.example.master.models.DetectedFace
 import java.util.*
 
 class HomeFragment : Fragment() {
@@ -33,10 +33,10 @@ class HomeFragment : Fragment() {
 
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
+        initRecyclerView()
+
         readDataForRecyclerView()
         observeDataForRecyclerView()
-
-        initRecyclerView()
 
         return binding.root
     }
@@ -53,11 +53,20 @@ class HomeFragment : Fragment() {
     private fun observeDataForRecyclerView() {
         this.let {
             homeViewModel.detectedFaces.observe(this) {
-                val faces = it
-                val smilling = faces.filter {
-                    it.smilingProbability > 1
+                if (it.isNotEmpty()) {
+                    val smilingCount = it.filter {
+                        it.smilingProbability > 1
+                    }.count()
+
+                    val faces = ActivityObject(
+                        ActivityEnum.FACES,
+                        smilingCount,
+                        "smiles",
+                        it.size,
+                        R.drawable.ic_step
+                    )
+                    updateRecyclerView(faces)
                 }
-                Log.d("Faces num: ", faces.size.toString())
             }
         }
 
@@ -86,14 +95,12 @@ class HomeFragment : Fragment() {
             homeViewModel.steps.observe(this) {
                 val steps = ActivityObject(
                     ActivityEnum.STEPS,
-                    it,
+                    it ?: 0,
                     "steps",
                     5000,
-                    "ic_step"
+                    R.drawable.ic_step
                 )
-                activityObjects.add(steps)
-
-                Log.d("Steps: ", steps.toString())
+                updateRecyclerView(steps)
             }
         }
     }
@@ -101,14 +108,11 @@ class HomeFragment : Fragment() {
     private fun initRecyclerView() {
       if (binding.recyclerViewSummary.adapter != null) return
       binding.recyclerViewSummary.adapter = SummaryRecyclerViewAdapter()
-      val faces = ArrayList<DetectedFace>()
-      faces.add(DetectedFace())
-      faces.add(DetectedFace())
-      faces.add(DetectedFace())
-      faces.add(DetectedFace())
-      faces.add(DetectedFace())
-      faces.add(DetectedFace())
-      (binding.recyclerViewSummary.adapter as SummaryRecyclerViewAdapter).submitList(faces)
     }
 
+    private fun updateRecyclerView(activityObject: ActivityObject) {
+        activityObjects.add(activityObject)
+        (binding.recyclerViewSummary.adapter as SummaryRecyclerViewAdapter).submitList(activityObjects)
+        (binding.recyclerViewSummary.adapter as SummaryRecyclerViewAdapter).notifyDataSetChanged()
+    }
 }
