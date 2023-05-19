@@ -14,6 +14,7 @@ import com.example.master.databinding.FragmentHomeBinding
 import com.example.master.enum.ActivityEnum
 import com.example.master.models.ActivityObject
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class HomeFragment : Fragment() {
 
@@ -55,7 +56,7 @@ class HomeFragment : Fragment() {
             homeViewModel.detectedFaces.observe(this) {
                 if (it.isNotEmpty()) {
                     val smilingCount = it.filter {
-                        it.smilingProbability > 1
+                        it.smilingProbability > 0.5
                     }.count()
 
                     val faces = ActivityObject(
@@ -63,7 +64,7 @@ class HomeFragment : Fragment() {
                         smilingCount,
                         "smiles",
                         it.size,
-                        R.drawable.ic_step
+                        R.drawable.ic_smile
                     )
                     updateRecyclerView(faces)
                 }
@@ -86,8 +87,40 @@ class HomeFragment : Fragment() {
 
         this.let {
             homeViewModel.usageStat.observe(this) {
-                val statistics = it
-                Log.d("Statistics: ", statistics.size.toString())
+                var socialTime = 0L
+                var totalTime = 0L
+
+                it.map {  totalTime += it.totalTime }
+
+                it.filter{
+                    it.isSocialNetwork
+                }. map {
+                    socialTime += it.totalTime
+                }
+
+                // social time
+                if (totalTime != 0L) { // total time, because user can use only non social apps :)
+                    val socialTimeObject = ActivityObject(
+                        ActivityEnum.SOCIAL_NETWORKS,
+                        socialTime.toInt(),
+                        "h/min",
+                        totalTime.toInt(),
+                        R.drawable.ic_social_network
+                    )
+                    updateRecyclerView(socialTimeObject)
+                }
+
+                // display time
+                if (totalTime != 0L) {
+                    val displayTimeObject = ActivityObject(
+                        ActivityEnum.DISPLAY_TIME,
+                        totalTime.toInt(),
+                        "h/min",
+                        TimeUnit.HOURS.toMillis(2).toInt(), // 2 hours in milliseconds
+                        R.drawable.ic_app_usage
+                    )
+                    updateRecyclerView(displayTimeObject)
+                }
             }
         }
 
@@ -97,7 +130,7 @@ class HomeFragment : Fragment() {
                     ActivityEnum.STEPS,
                     it ?: 0,
                     "steps",
-                    5000,
+                    100, // TODO: set to 6000, 10000
                     R.drawable.ic_step
                 )
                 updateRecyclerView(steps)

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.master.databinding.ItemSummaryBinding
+import com.example.master.enum.ActivityEnum
 import com.example.master.models.ActivityObject
 
 class SummaryRecyclerViewAdapter : ListAdapter<ActivityObject, SummaryRecyclerViewAdapter.SummaryHolder>(DIFF_CALLBACK) {
@@ -39,9 +40,24 @@ class SummaryRecyclerViewAdapter : ListAdapter<ActivityObject, SummaryRecyclerVi
 
             binding.imageSummary.setImageResource(mSummary.icon)
             binding.labelSummaryType.text = mSummary.type
-            binding.labelSummaryValue.text = "${mSummary.value}/${mSummary.referenceValue} ${mSummary.measurementUnit}"
-            binding.progressBar.progress = mSummary.value
-            binding.progressBar.max = mSummary.referenceValue
+            when (mSummary.type) {
+                ActivityEnum.SOCIAL_NETWORKS, ActivityEnum.DISPLAY_TIME -> {
+                    val socialMinutes = (mSummary.value / (1000*60)) % 60
+                    val socialHours = mSummary.value / (1000 * 60 * 60) % 24
+                    val totalMinutes = (mSummary.referenceValue / (1000*60)) % 60
+                    val totalHours = mSummary.referenceValue / (1000 * 60 * 60) % 24
+
+                    binding.labelSummaryValue.text = "${socialHours}h ${socialMinutes}min / ${totalHours}h ${totalMinutes}min"
+
+                    binding.progressBar.progress = (socialHours * 60) + socialMinutes
+                    binding.progressBar.max = (totalHours * 60) + totalMinutes
+                }
+                else -> {
+                    binding.labelSummaryValue.text = "${mSummary.value}/${mSummary.referenceValue} ${mSummary.measurementUnit}"
+                    binding.progressBar.progress = mSummary.value
+                    binding.progressBar.max = mSummary.referenceValue
+                }
+            }
         }
     }
 }

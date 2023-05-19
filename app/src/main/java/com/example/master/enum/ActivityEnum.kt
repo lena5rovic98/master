@@ -6,6 +6,6 @@ object ActivityEnum {
     const val FACES = "Faces"
     const val SMS = "SMS"
     const val PHONE_CALLS = "Phone calls"
-    const val APPS_USAGE = "Applications usage"
+    const val SOCIAL_NETWORKS = "Social networks"
     const val SLEEP = "sleep" // TODO
 }
