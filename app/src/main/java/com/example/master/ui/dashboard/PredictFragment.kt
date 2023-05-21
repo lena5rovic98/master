@@ -3,7 +3,6 @@ package com.example.master.ui.dashboard
 import android.Manifest
 import android.Manifest.permission.READ_CALL_LOG
 import android.Manifest.permission.WRITE_CALL_LOG
-import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.os.Build
@@ -20,9 +19,9 @@ import com.example.master.R
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DashboardFragment : Fragment() {
+class PredictFragment : Fragment() {
 
-  private lateinit var dashboardViewModel: DashboardViewModel
+  private lateinit var predictViewModel: PredictViewModel
   private lateinit var textView: TextView
 
   @RequiresApi(Build.VERSION_CODES.Q)
@@ -31,9 +30,9 @@ class DashboardFragment : Fragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    dashboardViewModel =
-      ViewModelProvider(this).get(DashboardViewModel::class.java)
-    val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
+    predictViewModel =
+      ViewModelProvider(this).get(PredictViewModel::class.java)
+    val root = inflater.inflate(R.layout.fragment_predict, container, false)
     textView = root.findViewById(R.id.text_dashboard)
 
     // getByDays()

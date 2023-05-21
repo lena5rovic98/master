@@ -7,9 +7,9 @@
         android:title="@string/title_home"/>
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_predict"
         android:icon="@drawable/ic_machine_learning"
-        android:title="@string/title_dashboard"/>
+        android:title="@string/title_predict"/>
 
     <item
         android:id="@+id/navigation_camera"
