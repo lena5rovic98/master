@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_predict"
-        android:name="com.example.master.ui.dashboard.PredictFragment"
+        android:name="com.example.master.ui.predict.PredictFragment"
         android:label="@string/title_predict"
         tools:layout="@layout/fragment_predict" />
 

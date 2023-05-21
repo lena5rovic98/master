@@ -1,4 +1,4 @@
-package com.example.master.ui.dashboard
+package com.example.master.ui.predict
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

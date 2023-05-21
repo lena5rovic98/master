@@ -28,4 +28,8 @@
     <string name="label_save_changes">Save changes</string>
     <string name="toast_user_updated">User data updated!</string>
 
+    <!-- Predict Fragment -->
+    <string name="label_predict">By clicking the button below, you can predict your health condition and detect a potential problem based on data collected over time</string>
+    <string name="button_predict">Predict my condition</string>
+
 </resources>
