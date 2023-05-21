@@ -98,7 +98,7 @@ class HomeViewModel : ViewModel() {
         val userData = FirebaseReferences.activityReference
             ?.child(userId)
             ?.child("callLogs")
-            ?.child(dateId)
+            ?.child("14052023")
 
         val phoneCalls = arrayListOf<PhoneCall>()
         userData?.addValueEventListener(object : ValueEventListener {

@@ -2,7 +2,6 @@ package com.example.master.ui.home
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,15 +72,38 @@ class HomeFragment : Fragment() {
 
         this.let {
             homeViewModel.messages.observe(this) {
-                val sms = it
-                Log.d("SMS num: ", sms.size.toString())
+                val sentSMSCount = it.filter {
+                    it.type == "sent"
+                }.count()
+
+                if (it.isNotEmpty()) {
+                    val sms = ActivityObject(
+                        ActivityEnum.SMS,
+                        sentSMSCount,
+                        "SMS",
+                        it.size,
+                        R.drawable.ic_sms
+                    )
+                    updateRecyclerView(sms)
+                }
             }
         }
 
         this.let {
             homeViewModel.calls.observe(this) {
-                val phoneCalls = it
-                Log.d("Phone calls num: ", phoneCalls.size.toString())
+                val outgoingCallsCount = it.filter {
+                    it.callType == "OUTGOING"
+                }.count()
+                if (it.isNotEmpty()) {
+                    val calls = ActivityObject(
+                        ActivityEnum.PHONE_CALLS,
+                        outgoingCallsCount,
+                        "calls",
+                        it.size,
+                        R.drawable.ic_phone_call
+                    )
+                    updateRecyclerView(calls)
+                }
             }
         }
 
