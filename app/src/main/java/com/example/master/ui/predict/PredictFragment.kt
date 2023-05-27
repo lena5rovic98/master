@@ -77,7 +77,7 @@ class PredictFragment : Fragment() {
     // Releases model resources if no longer used.
     model.close()
 
-    val predictDialog = PredictionDialog(
+    val predictDialog = DangerDialog(
       requireContext(),
       inDanger
     )

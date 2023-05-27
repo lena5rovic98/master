@@ -8,7 +8,7 @@ import com.example.master.R
 import com.example.master.databinding.DialogPredictionBinding
 import com.example.master.enum.DangerEnum
 
-class PredictionDialog(
+class DangerDialog(
     context: Context,
     private val inDanger: DangerEnum
 ): Dialog(context) {
