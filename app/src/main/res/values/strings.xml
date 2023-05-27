@@ -37,7 +37,7 @@
     <string name="button_check">Check</string>
     <string name="button_predict">Predict</string>
 
-    <!-- Predict Dialog -->
+    <!-- Danger Dialog -->
     <string name="title_dangerous_condition">Dangerous condition</string>
     <string name="title_non_dangerous_condition">Harmless condition</string>
     <string name="label_daily_prediction">Daily prediction</string>
@@ -46,5 +46,16 @@
     <string name="label_dangerous_condition">Machine learning algorithm has classified your health condition as <b>dangerous</b></string>
     <string name="label_non_dangerous_condition">Machine learning algorithm has classified your health condition as <b>non dangerous</b>. To get more information try to predict your health condition on previous screen.</string>
 
+    <!-- Prediction Dialog -->
+    <string name="title_stress">Stress</string>
+    <string name="title_anxiety">Anxiety</string>
+    <string name="title_depression">Depression</string>
+    <string name="title_none">None</string>
+
+    <string name="label_prediction"><![CDATA[Your health condition is classified as <b>%s</b>. Probably due to <b>%s</b>. If you want to know the causes and tips, look <u>here</u>.]]></string>
+
+    <string name="link_stress">https://www.who.int/news-room/questions-and-answers/item/stress</string>
+    <string name="link_anxiety">https://www.medicalnewstoday.com/articles/323454</string>
+    <string name="link_depression">https://www.who.int/news-room/fact-sheets/detail/depression</string>
 
 </resources>

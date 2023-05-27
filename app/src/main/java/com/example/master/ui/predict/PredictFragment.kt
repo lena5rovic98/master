@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.master.databinding.FragmentPredictBinding
 import com.example.master.enum.DangerEnum
+import com.example.master.enum.PredictionEnum
 import com.example.master.ml.TfliteModel1
 import com.example.master.ml.UserData
 import org.tensorflow.lite.DataType
@@ -104,8 +105,13 @@ class PredictFragment : Fragment() {
     val array = outputs.outputFeature0AsTensorBuffer.floatArray
     binding.labelOutput.text = "${array[0]}, ${array[1]}, ${array[2]}, ${array[3]}"
 
+    val predictionDialog = PredictionDialog(
+      requireContext(),
+      PredictionEnum.STRESS
+    )
+    predictionDialog.show()
+
     // Releases model resources if no longer used.
     model.close()
-
   }
 }
