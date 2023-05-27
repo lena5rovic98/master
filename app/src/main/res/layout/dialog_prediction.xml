@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_big"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+            android:id="@+id/label_predict"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_non_dangerous_condition"
+            android:textSize="@dimen/font_big"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+            android:id="@+id/image_result"
+            android:layout_width="@dimen/image_big"
+            android:layout_height="@dimen/image_big"
+            android:layout_marginTop="@dimen/margin_extra_big"
+            android:src="@drawable/ic_danger"
+            android:tint="@color/red"
+            app:layout_constraintTop_toBottomOf="@id/label_predict"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+            android:id="@+id/label_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:layout_marginHorizontal="@dimen/margin_big"
+            android:textAlignment="center"
+            android:textSize="@dimen/font_normal"
+            android:text="@string/label_non_dangerous_condition"
+            app:layout_constraintTop_toBottomOf="@id/image_result"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,5 +16,8 @@
     <dimen name="font_normal">16dp</dimen>
     <dimen name="font_big">20dp</dimen>
 
+    <!-- Image -->
+    <dimen name="image_normal">40dp</dimen>
+    <dimen name="image_big">150dp</dimen>
 
 </resources>

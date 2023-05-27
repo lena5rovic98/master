@@ -29,7 +29,22 @@
     <string name="toast_user_updated">User data updated!</string>
 
     <!-- Predict Fragment -->
-    <string name="label_predict">By clicking the button below, you can predict your health condition and detect a potential problem based on data collected over time</string>
-    <string name="button_predict">Predict my condition</string>
+    <string name="label_note">In order to check or predict your potential health condition, the machine learning algorithm uses data such as: age, weight, height, gender, whether you smoke, number of steps, time spent on the phone, detected smiles in pictures, the ratio of the number of sent and received messages, as well as outgoing and incoming calls.</string>
+    <string name="label_check_if">Check if you have a potential problem</string>
+    <string name="label_predict_today">Predict your health condition and detect a potential problem based on today\'s data</string>
+    <string name="label_predict_week">Predict your health condition and detect a potential problem based on weekly data</string>
+
+    <string name="button_check">Check</string>
+    <string name="button_predict">Predict</string>
+
+    <!-- Predict Dialog -->
+    <string name="title_dangerous_condition">Dangerous condition</string>
+    <string name="title_non_dangerous_condition">Harmless condition</string>
+    <string name="label_daily_prediction">Daily prediction</string>
+    <string name="label_weekly_prediction">Weekly prediction</string>
+
+    <string name="label_dangerous_condition">Machine learning algorithm has classified your health condition as <b>dangerous</b></string>
+    <string name="label_non_dangerous_condition">Machine learning algorithm has classified your health condition as <b>non dangerous</b>. To get more information try to predict your health condition on previous screen.</string>
+
 
 </resources>

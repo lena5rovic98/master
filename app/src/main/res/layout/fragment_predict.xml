@@ -5,41 +5,168 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/navigation_bar_height"
     tools:context=".ui.predict.PredictFragment" >
 
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_2"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/black"
+            app:layout_constraintGuide_percent="0.2"/>
+
+    <ImageView
+            android:id="@+id/image_check"
+            android:layout_width="@dimen/image_normal"
+            android:layout_height="@dimen/image_normal"
+            android:src="@drawable/ic_check"
+            app:layout_constraintTop_toTopOf="@id/label_predict"
+            app:layout_constraintBottom_toBottomOf="@id/button_check"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline_2"/>
+
     <TextView
-        android:id="@+id/label_predict"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_normal"
-        android:layout_marginTop="@dimen/margin_extra_big"
-        android:textAlignment="center"
-        android:text="@string/label_predict"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+            android:id="@+id/label_predict"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:textAlignment="center"
+            android:text="@string/label_check_if"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline_2"
+            app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
-            android:id="@+id/button_predict"
+            android:id="@+id/button_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/label_predict"
             android:layout_marginTop="@dimen/margin_normal"
-            android:text="@string/button_predict"
+            android:text="@string/button_check"
             android:textAllCaps="false"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline_2"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:background="@color/lighter_gray"
+            app:layout_constraintTop_toBottomOf="@id/button_check"/>
+
+    <ImageView
+            android:id="@+id/image_predict_today"
+            android:layout_width="@dimen/image_normal"
+            android:layout_height="@dimen/image_normal"
+            android:src="@drawable/ic_prediction"
+            app:layout_constraintTop_toTopOf="@id/label_predict_today"
+            app:layout_constraintBottom_toBottomOf="@id/button_predict_today"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline_2"/>
+
     <TextView
-        android:id="@+id/label_output"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_normal"
-        android:layout_marginTop="@dimen/margin_extra_big"
-        android:textAlignment="center"
-        android:text="Output?"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_predict"/>
+            android:id="@+id/label_predict_today"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_extra_big"
+            android:textAlignment="center"
+            android:text="@string/label_predict_today"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline_2"
+            app:layout_constraintTop_toBottomOf="@id/button_check"/>
+
+    <Button
+            android:id="@+id/button_predict_today"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="@string/button_predict"
+            android:textAllCaps="false"
+            app:layout_constraintStart_toEndOf="@id/guideline_2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_predict_today"/>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:background="@color/lighter_gray"
+            app:layout_constraintTop_toBottomOf="@id/button_predict_today"/>
+
+    <ImageView
+            android:id="@+id/image_predict_weekly"
+            android:layout_width="@dimen/image_normal"
+            android:layout_height="@dimen/image_normal"
+            android:src="@drawable/ic_prediction"
+            app:layout_constraintTop_toTopOf="@id/label_predict_weekly"
+            app:layout_constraintBottom_toBottomOf="@id/button_predict_weekly"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline_2"/>
+
+    <TextView
+            android:id="@+id/label_predict_weekly"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_extra_big"
+            android:textAlignment="center"
+            android:text="@string/label_predict_week"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline_2"
+            app:layout_constraintTop_toBottomOf="@id/button_predict_today"/>
+
+    <Button
+            android:id="@+id/button_predict_weekly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="@string/button_predict"
+            android:textAllCaps="false"
+            app:layout_constraintStart_toEndOf="@id/guideline_2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_predict_weekly"/>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:background="@color/lighter_gray"
+            app:layout_constraintTop_toBottomOf="@id/button_predict_weekly"/>
+
+    <TextView
+            android:id="@+id/label_output"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_extra_big"
+            android:textAlignment="center"
+            android:text="Output?"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_predict_weekly"/>
+
+    <TextView
+            android:id="@+id/label_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_normal"
+            android:textAlignment="center"
+            android:text="@string/label_note"
+            android:textSize="@dimen/font_small"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
