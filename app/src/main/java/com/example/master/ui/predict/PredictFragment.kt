@@ -57,8 +57,8 @@ class PredictFragment : Fragment() {
     val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 5), DataType.FLOAT32)
     inputFeature0.loadArray(
       intArrayOf(
-        2, 0, 1, 0, 1
-//       2, 1, 1, 2, 0
+//        2, 0, 1, 0, 1 // no
+       2, 1, 1, 2, 0 // yes
       )
     )
 
@@ -93,9 +93,9 @@ class PredictFragment : Fragment() {
     //inputFeature0.loadBuffer(byteBuffer)
     inputFeature0.loadArray(
       intArrayOf(
-      // 44,65,175,1,0,18698,467,0,2,2,1
-        // 30,81,200,1,0,10821,389,1,1,2,1
-        48,103,197,1,1,19290,69,0,2,1,0
+       44,65,175,1,0,18698,467,0,2,2,1
+//         30,81,200,1,0,10821,389,1,1,2,1 
+//        48,103,197,1,1,19290,69,0,2,1,0 // 3
       )
     )
 
@@ -105,9 +105,18 @@ class PredictFragment : Fragment() {
     val array = outputs.outputFeature0AsTensorBuffer.floatArray
     binding.labelOutput.text = "${array[0]}, ${array[1]}, ${array[2]}, ${array[3]}"
 
+    val index = array.indexOfFirst { it == 1.0f }
+    var predictionResult = PredictionEnum.NONE
+    when (index) {
+      0 -> predictionResult = PredictionEnum.STRESS
+      1 -> predictionResult = PredictionEnum.ANXIETY
+      2 -> predictionResult = PredictionEnum.DEPRESSION
+      3 -> predictionResult = PredictionEnum.NONE
+    }
+
     val predictionDialog = PredictionDialog(
       requireContext(),
-      PredictionEnum.STRESS
+      predictionResult
     )
     predictionDialog.show()
 
