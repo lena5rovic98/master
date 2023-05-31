@@ -44,6 +44,9 @@ class ProfileFragment: Fragment() {
                 binding.editTextAge.setText(it.age.toString())
                 binding.editTextWeight.setText(it.weight.toString())
                 binding.editTextHeight.setText(it.height.toString())
+                binding.radioFemale.isChecked = it.gender == 1
+                binding.radioMale.isChecked = it.gender == 0
+                binding.switchSmoker.isChecked = it.smoke != 0
                 binding.switchAllowAccess.isChecked = it.shareData
             }
         }
@@ -60,6 +63,8 @@ class ProfileFragment: Fragment() {
                 Integer.parseInt(binding.editTextAge.text.toString()),
                 Integer.parseInt(binding.editTextWeight.text.toString()),
                 Integer.parseInt(binding.editTextHeight.text.toString()),
+                if (binding.radioFemale.isChecked) 1 else 0,
+                if (binding.switchSmoker.isChecked) 1 else 0,
                 binding.switchAllowAccess.isChecked
             )
             getData()

@@ -32,11 +32,13 @@ class ProfileViewModel: ViewModel() {
         )
     }
 
-    fun updateUserData(age: Int, weight: Int, height: Int, shareData: Boolean) {
+    fun updateUserData(age: Int, weight: Int, height: Int, gender: Int, smoke: Int, shareData: Boolean) {
         val userId = FirebaseAuthentication.getUser()?.uid!!
         FirebaseReferences.usersReference?.child(userId)?.child("age")?.setValue(age)
         FirebaseReferences.usersReference?.child(userId)?.child("weight")?.setValue(weight)
         FirebaseReferences.usersReference?.child(userId)?.child("height")?.setValue(height)
+        FirebaseReferences.usersReference?.child(userId)?.child("gender")?.setValue(gender)
+        FirebaseReferences.usersReference?.child(userId)?.child("smoke")?.setValue(smoke)
         FirebaseReferences.usersReference?.child(userId)?.child("shareData")?.setValue(shareData)
     }
 }

@@ -6,5 +6,7 @@ data class User(
     val age: Int = 0,
     val weight: Int = 0,
     val height: Int = 0,
+    val gender: Int = 0, // 0 - male, 1 - female
+    val smoke: Int = 0,
     val shareData: Boolean = true
 )
