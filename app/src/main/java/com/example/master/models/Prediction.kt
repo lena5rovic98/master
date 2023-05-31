@@ -12,5 +12,5 @@ data class Prediction(
     val sms: Float = 0.0F,
     val phone: Float = 0.0F,
     val social: Float = 0.0F,
-    val prediction: String = "none"
+    val prediction: String = "NONE"
 )
