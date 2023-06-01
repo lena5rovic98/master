@@ -11,8 +11,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.master.databinding.FragmentPredictBinding
 import com.example.master.enum.DangerEnum
 import com.example.master.enum.PredictionEnum
+import com.example.master.extensions.normalize
+import com.example.master.firebase.FirebaseReferences
+import com.example.master.helpers.MinMaxNormValues
 import com.example.master.ml.*
 import com.example.master.models.Prediction
+import com.example.master.models.User
+import com.google.firebase.ktx.Firebase
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 
@@ -23,6 +28,8 @@ class PredictFragment : Fragment() {
 
   private lateinit var predictViewModel: PredictViewModel
 
+  private var userData: User? = null
+
   @RequiresApi(Build.VERSION_CODES.Q)
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -32,9 +39,26 @@ class PredictFragment : Fragment() {
     _binding = FragmentPredictBinding.inflate(inflater, container, false)
     predictViewModel = ViewModelProvider(this)[PredictViewModel::class.java]
 
+    observeData()
     setListeners()
 
+    predictViewModel.getUserData()
+
     return binding.root
+  }
+
+  private fun observeData() {
+    predictViewModel.user.observe(viewLifecycleOwner) {
+      if (userData != User()) {
+        userData = it
+
+        FirebaseReferences.inputData.age = it.age.normalize(MinMaxNormValues.ageMin, MinMaxNormValues.ageMax)
+        FirebaseReferences.inputData.weight = it.weight.normalize(MinMaxNormValues.weightMin, MinMaxNormValues.weightMax)
+        FirebaseReferences.inputData.height = it.height.normalize(MinMaxNormValues.heightMin, MinMaxNormValues.heightMax)
+        FirebaseReferences.inputData.gender = it.gender.toFloat()
+        FirebaseReferences.inputData.smoke = it.smoke.toFloat()
+      }
+    }
   }
 
   @RequiresApi(Build.VERSION_CODES.O)
@@ -95,17 +119,31 @@ class PredictFragment : Fragment() {
     inputFeatureNorm.loadArray(
       floatArrayOf(
 //        0.7380952380952379F, 0.8999999999999999F, 0.16000000000000014F, 1.0F, 1.0F, 0.6027246318741861F, 0.08541666666666667F, 0.0F, 0.0F, 0.0F, 0.0F // 0 0 1 0
-        0.16666666666666669F,
-        0.8714285714285714F,
-        0.2400000000000002F,
-        1.0F,
-        0.0F,
-        0.9510167284383452F,
-        0.07291666666666667F,
-        2.0F,
-        2.0F,
-        1.0F,
-        0.0F // 1. 0. 0. 0.
+
+//        0.16666666666666669F,
+//        0.8714285714285714F,
+//        0.2400000000000002F,
+//        1.0F,
+//        0.0F,
+//        0.9510167284383452F,
+//        0.07291666666666667F,
+//        2.0F,
+//        2.0F,
+//        1.0F,
+//        0.0F // 1. 0. 0. 0.
+
+
+        FirebaseReferences.inputData.age,
+        FirebaseReferences.inputData.weight,
+        FirebaseReferences.inputData.height,
+        FirebaseReferences.inputData.gender,
+        FirebaseReferences.inputData.smoke,
+        FirebaseReferences.inputData.steps,
+        FirebaseReferences.inputData.displayTime,
+        FirebaseReferences.inputData.smiles,
+        FirebaseReferences.inputData.sms,
+        FirebaseReferences.inputData.phone,
+        FirebaseReferences.inputData.social
       )
     )
 
@@ -124,21 +162,9 @@ class PredictFragment : Fragment() {
       3 -> predictionResult = PredictionEnum.NONE
     }
 
+    FirebaseReferences.inputData.prediction = predictionResult.name
     predictViewModel.writePrediction(
-      Prediction(
-        0.16666666666666669F,
-        0.8714285714285714F,
-        0.2400000000000002F,
-        1.0F,
-        0.0F,
-        0.9510167284383452F,
-        0.07291666666666667F,
-        2.0F,
-        2.0F,
-        1.0F,
-        0.0F,
-        predictionResult.name
-      )
+      FirebaseReferences.inputData
     )
     val predictionDialog = PredictionDialog(
       requireContext(),

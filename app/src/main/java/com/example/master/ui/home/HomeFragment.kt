@@ -11,6 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.master.R
 import com.example.master.databinding.FragmentHomeBinding
 import com.example.master.enum.ActivityEnum
+import com.example.master.extensions.normalize
+import com.example.master.firebase.FirebaseReferences
+import com.example.master.helpers.MinMaxNormValues
 import com.example.master.models.ActivityObject
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -65,6 +68,7 @@ class HomeFragment : Fragment() {
                         it.size,
                         R.drawable.ic_smile
                     )
+                    FirebaseReferences.inputData.smiles = if (smilingCount > it.count()) 1F else 0F
                     updateRecyclerView(faces)
                 }
             }
@@ -84,6 +88,7 @@ class HomeFragment : Fragment() {
                         it.size,
                         R.drawable.ic_sms
                     )
+                    FirebaseReferences.inputData.sms = if (sentSMSCount > it.count()) 1F else 0F
                     updateRecyclerView(sms)
                 }
             }
@@ -102,6 +107,7 @@ class HomeFragment : Fragment() {
                         it.size,
                         R.drawable.ic_phone_call
                     )
+                    FirebaseReferences.inputData.phone = if (outgoingCallsCount > it.count()) 1F else 0F
                     updateRecyclerView(calls)
                 }
             }
@@ -129,6 +135,7 @@ class HomeFragment : Fragment() {
                         totalTime.toInt(),
                         R.drawable.ic_social_network
                     )
+                    FirebaseReferences.inputData.social = if (socialTime > totalTime * 0.5) 1F else 0F
                     updateRecyclerView(socialTimeObject)
                 }
 
@@ -141,6 +148,8 @@ class HomeFragment : Fragment() {
                         TimeUnit.HOURS.toMillis(2).toInt(), // 2 hours in milliseconds
                         R.drawable.ic_app_usage
                     )
+                    val minutes = TimeUnit.MILLISECONDS.toMinutes(totalTime).toInt()
+                    FirebaseReferences.inputData.displayTime = minutes.normalize(MinMaxNormValues.displayTimeMin, MinMaxNormValues.displayTimeMax)
                     updateRecyclerView(displayTimeObject)
                 }
             }
@@ -155,6 +164,7 @@ class HomeFragment : Fragment() {
                     100, // TODO: set to 6000, 10000
                     R.drawable.ic_step
                 )
+                FirebaseReferences.inputData.steps = 35.normalize(MinMaxNormValues.stepsMin, MinMaxNormValues.stepsMax).toFloat()
                 updateRecyclerView(steps)
             }
         }

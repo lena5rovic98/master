@@ -100,7 +100,7 @@ class CameraFragment: Fragment(), LocationListener {
                 var i = 1
                 for (face in firebaseVisionFaces) {
                     firebaseFace = face
-                    resultText = "$resultText, FACE NUMBER. $i: \nSmile: ${face.smilingProbability * 100}%" +
+                    resultText = "$resultText\n FACE NUMBER. $i: \nSmile: ${face.smilingProbability * 100}%" +
                             "\nleft eye open: ${face.leftEyeOpenProbability * 100}%" +
                             "\nright eye open: ${face.rightEyeOpenProbability * 100}%"
 

@@ -35,7 +35,7 @@ class NotificationsFragment : Fragment() {
       textView.text = it
     })
 
-    getRingtoneVolume()
+    // getRingtoneVolume()
 
 
     return root
