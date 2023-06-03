@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_home,
                 R.id.navigation_predict,
                 R.id.navigation_camera,
-                R.id.navigation_notifications,
+                R.id.navigation_trends,
                 R.id.navigation_profile
             )
         )

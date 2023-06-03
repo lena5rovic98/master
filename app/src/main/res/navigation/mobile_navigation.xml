@@ -24,10 +24,10 @@
         tools:layout="@layout/fragment_camera" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.master.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_trends"
+        android:name="com.example.master.ui.trends.TrendsFragment"
+        android:label="@string/title_trends"
+        tools:layout="@layout/fragment_trends" />
 
     <fragment
         android:id="@+id/navigation_profile"

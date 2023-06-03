@@ -17,9 +17,9 @@
         android:title="@string/title_camera"/>
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_trends"
         android:icon="@drawable/ic_earth"
-        android:title="@string/title_notifications"/>
+        android:title="@string/title_trends"/>
 
     <item
         android:id="@+id/navigation_profile"
