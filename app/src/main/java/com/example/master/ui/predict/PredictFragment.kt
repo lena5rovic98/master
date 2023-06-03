@@ -75,15 +75,28 @@ class PredictFragment : Fragment() {
   }
 
   private fun checkIfInDanger() {
-    // calls, sms, mobile use, activity, danger.
+    // calls, sms, smiles, mobile use, activity
 
     val model = UserData.newInstance(requireContext())
     // Creates inputs for reference.
     val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 5), DataType.FLOAT32)
+//    inputFeature0.loadArray(
+//      intArrayOf(
+////        2, 0, 1, 0, 1 // no
+//       2, 1, 1, 2, 0 // yes
+//      )
+//    )
+
+    val displayTime = if (FirebaseReferences.inputData.displayTime < 100) 0 else if (FirebaseReferences.inputData.displayTime > 100 && FirebaseReferences.inputData.displayTime < 240) 1 else 2
+    val steps = if (FirebaseReferences.inputData.steps < 1000) 0 else if (FirebaseReferences.inputData.steps > 1000 && FirebaseReferences.inputData.displayTime < 10000) 1 else 2
+
     inputFeature0.loadArray(
-      intArrayOf(
-//        2, 0, 1, 0, 1 // no
-       2, 1, 1, 2, 0 // yes
+      floatArrayOf(
+        FirebaseReferences.inputData.phone,
+        FirebaseReferences.inputData.sms,
+        FirebaseReferences.inputData.smiles,
+        displayTime.toFloat(),
+        steps.toFloat()
       )
     )
 
