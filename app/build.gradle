@@ -101,4 +101,7 @@ dependencies {
     // Google play services
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.google.android.gms:play-services-fitness:20.0.0'
+
+    // Bar Chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
