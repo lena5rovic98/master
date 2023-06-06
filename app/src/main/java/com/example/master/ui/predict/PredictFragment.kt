@@ -17,7 +17,6 @@ import com.example.master.helpers.MinMaxNormValues
 import com.example.master.ml.*
 import com.example.master.models.Prediction
 import com.example.master.models.User
-import com.google.firebase.ktx.Firebase
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 
@@ -29,6 +28,11 @@ class PredictFragment : Fragment() {
   private lateinit var predictViewModel: PredictViewModel
 
   private var userData: User? = null
+  private var age: Float = 0.0f
+  private var weight: Float = 0.0f
+  private var height: Float = 0.0f
+  private var gender: Float = 0.0f
+  private var smoke: Float = 0.0f
 
   @RequiresApi(Build.VERSION_CODES.Q)
   override fun onCreateView(
@@ -52,11 +56,11 @@ class PredictFragment : Fragment() {
       if (userData != User()) {
         userData = it
 
-        FirebaseReferences.inputData.age = it.age.normalize(MinMaxNormValues.ageMin, MinMaxNormValues.ageMax)
-        FirebaseReferences.inputData.weight = it.weight.normalize(MinMaxNormValues.weightMin, MinMaxNormValues.weightMax)
-        FirebaseReferences.inputData.height = it.height.normalize(MinMaxNormValues.heightMin, MinMaxNormValues.heightMax)
-        FirebaseReferences.inputData.gender = it.gender.toFloat()
-        FirebaseReferences.inputData.smoke = it.smoke.toFloat()
+        age = it.age.normalize(MinMaxNormValues.ageMin, MinMaxNormValues.ageMax)
+        weight = it.weight.normalize(MinMaxNormValues.weightMin, MinMaxNormValues.weightMax)
+        height = it.height.normalize(MinMaxNormValues.heightMin, MinMaxNormValues.heightMax)
+        gender = it.gender.toFloat()
+        smoke = it.smoke.toFloat()
       }
     }
   }
@@ -87,14 +91,14 @@ class PredictFragment : Fragment() {
 //      )
 //    )
 
-    val displayTime = if (FirebaseReferences.inputData.displayTime < 100) 0 else if (FirebaseReferences.inputData.displayTime > 100 && FirebaseReferences.inputData.displayTime < 240) 1 else 2
-    val steps = if (FirebaseReferences.inputData.steps < 1000) 0 else if (FirebaseReferences.inputData.steps > 1000 && FirebaseReferences.inputData.displayTime < 10000) 1 else 2
+    val displayTime = if (FirebaseReferences.displayTime < 100) 0 else if (FirebaseReferences.displayTime > 100 && FirebaseReferences.displayTime < 240) 1 else 2
+    val steps = if (FirebaseReferences.steps < 1000) 0 else if (FirebaseReferences.steps > 1000 && FirebaseReferences.displayTime < 10000) 1 else 2
 
     inputFeature0.loadArray(
       floatArrayOf(
-        FirebaseReferences.inputData.phone,
-        FirebaseReferences.inputData.sms,
-        FirebaseReferences.inputData.smiles,
+        FirebaseReferences.phone,
+        FirebaseReferences.sms,
+        FirebaseReferences.smiles,
         displayTime.toFloat(),
         steps.toFloat()
       )
@@ -146,17 +150,17 @@ class PredictFragment : Fragment() {
 //        0.0F // 1. 0. 0. 0.
 
 
-        FirebaseReferences.inputData.age,
-        FirebaseReferences.inputData.weight,
-        FirebaseReferences.inputData.height,
-        FirebaseReferences.inputData.gender,
-        FirebaseReferences.inputData.smoke,
-        FirebaseReferences.inputData.steps,
-        FirebaseReferences.inputData.displayTime,
-        FirebaseReferences.inputData.smiles,
-        FirebaseReferences.inputData.sms,
-        FirebaseReferences.inputData.phone,
-        FirebaseReferences.inputData.social
+        age,
+        weight,
+        height,
+        gender,
+        smoke,
+        FirebaseReferences.steps,
+        FirebaseReferences.displayTime,
+        FirebaseReferences.smiles,
+        FirebaseReferences.sms,
+        FirebaseReferences.phone,
+        FirebaseReferences.social
       )
     )
 
@@ -175,9 +179,23 @@ class PredictFragment : Fragment() {
       3 -> predictionResult = PredictionEnum.NONE
     }
 
-    FirebaseReferences.inputData.prediction = predictionResult.name
+    val prediction = Prediction(
+      age,
+      weight,
+      height,
+      gender,
+      smoke,
+      FirebaseReferences.steps,
+      FirebaseReferences.displayTime,
+      FirebaseReferences.smiles,
+      FirebaseReferences.sms,
+      FirebaseReferences.phone,
+      FirebaseReferences.social,
+      predictionResult.name
+    )
+
     predictViewModel.writePrediction(
-      FirebaseReferences.inputData
+      prediction
     )
     val predictionDialog = PredictionDialog(
       requireContext(),

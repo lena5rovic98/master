@@ -68,7 +68,7 @@ class HomeFragment : Fragment() {
                         it.size,
                         R.drawable.ic_smile
                     )
-                    FirebaseReferences.inputData.smiles = if (smilingCount > it.count()) 1F else 0F
+                    FirebaseReferences.smiles = if (smilingCount > it.count()) 1F else 0F
                     updateRecyclerView(faces)
                 }
             }
@@ -88,7 +88,7 @@ class HomeFragment : Fragment() {
                         it.size,
                         R.drawable.ic_sms
                     )
-                    FirebaseReferences.inputData.sms = if (sentSMSCount > it.count()) 1F else 0F
+                    FirebaseReferences.sms = if (sentSMSCount > it.count()) 1F else 0F
                     updateRecyclerView(sms)
                 }
             }
@@ -107,7 +107,7 @@ class HomeFragment : Fragment() {
                         it.size,
                         R.drawable.ic_phone_call
                     )
-                    FirebaseReferences.inputData.phone = if (outgoingCallsCount > it.count()) 1F else 0F
+                    FirebaseReferences.phone = if (outgoingCallsCount > it.count()) 1F else 0F
                     updateRecyclerView(calls)
                 }
             }
@@ -135,7 +135,7 @@ class HomeFragment : Fragment() {
                         totalTime.toInt(),
                         R.drawable.ic_social_network
                     )
-                    FirebaseReferences.inputData.social = if (socialTime > totalTime * 0.5) 1F else 0F
+                    FirebaseReferences.social = if (socialTime > totalTime * 0.5) 1F else 0F
                     updateRecyclerView(socialTimeObject)
                 }
 
@@ -149,7 +149,7 @@ class HomeFragment : Fragment() {
                         R.drawable.ic_app_usage
                     )
                     val minutes = TimeUnit.MILLISECONDS.toMinutes(totalTime).toInt()
-                    FirebaseReferences.inputData.displayTime = minutes.normalize(MinMaxNormValues.displayTimeMin, MinMaxNormValues.displayTimeMax)
+                    FirebaseReferences.displayTime = minutes.normalize(MinMaxNormValues.displayTimeMin, MinMaxNormValues.displayTimeMax)
                     updateRecyclerView(displayTimeObject)
                 }
             }
@@ -164,7 +164,7 @@ class HomeFragment : Fragment() {
                     100, // TODO: set to 6000, 10000
                     R.drawable.ic_step
                 )
-                FirebaseReferences.inputData.steps = 35.normalize(MinMaxNormValues.stepsMin, MinMaxNormValues.stepsMax).toFloat()
+                FirebaseReferences.steps = 35.normalize(MinMaxNormValues.stepsMin, MinMaxNormValues.stepsMax).toFloat()
                 updateRecyclerView(steps)
             }
         }

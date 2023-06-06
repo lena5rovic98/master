@@ -11,7 +11,13 @@ object FirebaseReferences {
     var activityReference: DatabaseReference? = null
     var predictionsReference: DatabaseReference? = null
 
-    var inputData: Prediction = Prediction()
+    // var inputData: Prediction = Prediction()
+    var smiles: Float = 0.0F
+    var sms: Float = 0.0F
+    var phone: Float = 0.0F
+    var social: Float = 0.0F
+    var displayTime: Float = 0.0F
+    var steps: Float = 0.0F
 
     init {
         firebaseDatabase = FirebaseDatabase.getInstance()
